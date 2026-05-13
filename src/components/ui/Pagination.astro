@@ -1,0 +1,66 @@
+---
+export interface Props {
+  currentPage: number;
+  lastPage: number;
+  prevUrl?: string;
+  nextUrl?: string;
+}
+
+const { currentPage, lastPage, prevUrl, nextUrl } = Astro.props;
+
+const isPrevDisabled = currentPage === 1;
+const isNextDisabled = currentPage === lastPage;
+---
+
+<nav
+  class="flex items-center justify-between gap-4 my-8"
+  aria-label="Pagination navigation"
+>
+  <!-- Previous Button -->
+  {
+    isPrevDisabled ? (
+      <button
+        disabled
+        class="px-4 py-2 rounded bg-slate/10 text-slate cursor-not-allowed font-dm text-sm"
+        aria-disabled="true"
+      >
+        ← Previous
+      </button>
+    ) : (
+      <a
+        href={prevUrl}
+        class="px-4 py-2 rounded bg-space text-snow hover:bg-crimson transition-colors font-dm text-sm focus-ring"
+        aria-label="Go to previous page"
+      >
+        ← Previous
+      </a>
+    )
+  }
+
+  <!-- Page Indicator -->
+  <div class="text-center font-dm text-sm text-slate">
+    Page <span class="font-semibold text-space">{currentPage}</span> of
+    <span class="font-semibold text-space">{lastPage}</span>
+  </div>
+
+  <!-- Next Button -->
+  {
+    isNextDisabled ? (
+      <button
+        disabled
+        class="px-4 py-2 rounded bg-slate/10 text-slate cursor-not-allowed font-dm text-sm"
+        aria-disabled="true"
+      >
+        Next →
+      </button>
+    ) : (
+      <a
+        href={nextUrl}
+        class="px-4 py-2 rounded bg-space text-snow hover:bg-crimson transition-colors font-dm text-sm focus-ring"
+        aria-label="Go to next page"
+      >
+        Next →
+      </a>
+    )
+  }
+</nav>

@@ -1,0 +1,136 @@
+@import "tailwindcss";
+
+@theme {
+  --color-space: #2B2D42;
+  --color-slate: #8D99AE;
+  --color-snow: #EDF2F4;
+  --color-crimson: #EF233C;
+  --color-scarlet: #D90429;
+
+  --font-syne: "Syne", ui-sans-serif, system-ui, sans-serif;
+  --font-dm: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+/* Typography base */
+@layer base {
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply bg-snow text-space font-dm;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-syne font-bold;
+  }
+}
+
+/* Prose overrides for MDX writeups */
+@layer components {
+  .prose {
+    @apply max-w-none;
+  }
+
+  .prose h1 {
+    @apply text-5xl font-syne font-extrabold text-space mt-8 mb-4;
+  }
+
+  .prose h2 {
+    @apply text-3xl font-syne font-bold text-space mt-8 mb-4;
+  }
+
+  .prose h3 {
+    @apply text-2xl font-syne font-bold text-space mt-6 mb-3;
+  }
+
+  .prose p {
+    @apply text-base font-dm leading-relaxed text-space;
+  }
+
+  .prose strong {
+    @apply font-bold text-space;
+  }
+
+  .prose a {
+    @apply text-crimson underline-offset-2 transition-colors hover:text-scarlet hover:underline;
+  }
+
+  .prose blockquote {
+    @apply border-l-4 border-crimson bg-snow py-1 pl-4 pr-4 italic text-space;
+  }
+
+  .prose code {
+    @apply font-mono text-sm;
+  }
+
+  .prose pre {
+    @apply rounded bg-space p-4 font-mono text-snow overflow-x-auto;
+  }
+
+  .prose pre code {
+    @apply text-snow;
+  }
+
+  .prose :not(pre) > code {
+    @apply rounded bg-slate/15 px-1.5 py-0.5 font-mono text-sm text-space;
+  }
+
+  .prose ul {
+    @apply list-disc list-inside space-y-2;
+  }
+
+  .prose ol {
+    @apply list-decimal list-inside space-y-2;
+  }
+
+  .prose li {
+    @apply text-space;
+  }
+
+  .prose img {
+    @apply rounded-lg;
+  }
+
+  .prose hr {
+    @apply border-slate/20 my-8;
+  }
+
+  .prose table {
+    @apply w-full border-collapse;
+  }
+
+  .prose th {
+    @apply border border-slate/20 bg-space px-3 py-2 text-snow font-syne;
+  }
+
+  .prose td {
+    @apply border border-slate/20 px-3 py-2;
+  }
+}
+
+/* Smooth scrolling anchor links */
+@layer utilities {
+  .scroll-to {
+    @apply transition-all duration-500;
+  }
+
+  /* Focus ring utility for accessibility */
+  .focus-ring {
+    @apply focus-visible:ring-2 focus-visible:ring-crimson focus-visible:ring-offset-2 focus-visible:ring-offset-snow;
+  }
+
+  /* Truncate utility for overflow text */
+  .truncate-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}

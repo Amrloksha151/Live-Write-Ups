@@ -1,0 +1,76 @@
+---
+import LucideIcon from '../ui/LucideIcon.astro';
+---
+
+<footer class="bg-space text-slate border-t border-slate/20 mt-16">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <!-- Three-column grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-12 py-12">
+      <!-- Brand Column -->
+      <div>
+        <h3 class="text-lg font-syne font-bold text-snow mb-2">Live Write Ups</h3>
+        <p class="text-sm text-slate leading-relaxed">
+          Free, open-source platform for cybersecurity write-ups that emphasize decision-making and
+          critical thinking.
+        </p>
+      </div>
+
+      <!-- Links Column -->
+      <div>
+        <h4 class="text-sm font-syne font-bold text-snow mb-4">Navigation</h4>
+        <ul class="space-y-2 text-sm">
+          <li>
+            <a href="/" class="text-slate hover:text-crimson transition-colors"> Home </a>
+          </li>
+          <li>
+            <a href="/#writeups" class="text-slate hover:text-crimson transition-colors">
+              All Write-ups
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://github.com/livewriteups/livewriteups/issues/new?labels=submission&template=writeup-submission.md"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-slate hover:text-crimson transition-colors"
+            >
+              Submit a Write-up
+            </a>
+          </li>
+          <li>
+            <a href="/about" class="text-slate hover:text-crimson transition-colors"> About </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Meta Column -->
+      <div>
+        <h4 class="text-sm font-syne font-bold text-snow mb-4">Project</h4>
+        <p class="text-sm text-slate mb-4">
+          Built with <span class="text-crimson">Astro</span> & <span class="text-crimson">MDX</span> · Open Source
+          · No tracking
+        </p>
+        <a
+          href="https://github.com/livewriteups/livewriteups"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 text-slate hover:text-crimson transition-colors"
+          aria-label="GitHub repository"
+        >
+          <LucideIcon name="github" class="w-4 h-4" />
+          <span class="text-sm">View on GitHub</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Bottom bar -->
+    <div class="border-t border-slate/20 py-6">
+      <p class="text-xs text-slate text-center">
+        © 2026 Live Write Ups · All content licensed under
+        <a href="https://creativecommons.org/licenses/by-sa/4.0/" class="text-crimson hover:text-scarlet transition-colors">
+          CC BY-SA 4.0
+        </a>
+      </p>
+    </div>
+  </div>
+</footer>

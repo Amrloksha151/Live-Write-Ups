@@ -1,0 +1,23 @@
+---
+import Hero from './Hero.astro';
+import WriteupGrid from './WriteupGrid.astro';
+
+export interface Props {
+  writeups: any[];
+  currentPage: number;
+  lastPage: number;
+  prevUrl?: string;
+  nextUrl?: string;
+}
+
+const { writeups, currentPage, lastPage, prevUrl, nextUrl } = Astro.props;
+---
+
+<Hero />
+<WriteupGrid
+  writeups={writeups}
+  currentPage={currentPage}
+  lastPage={lastPage}
+  prevUrl={prevUrl}
+  nextUrl={nextUrl}
+/>

@@ -1,0 +1,95 @@
+---
+import LucideIcon from '../ui/LucideIcon.astro';
+---
+
+<nav
+  class="sticky top-0 z-50 bg-space border-b border-slate/20"
+  aria-label="Main navigation"
+>
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+      <!-- Logo -->
+      <a href="/" class="flex items-center gap-2 group">
+        <span class="text-xl font-syne font-bold text-snow">
+          Live <span class="text-crimson">Write</span> Ups
+        </span>
+      </a>
+
+      <!-- Desktop Navigation -->
+      <div class="hidden md:flex items-center gap-8">
+        <a href="/" class="text-snow hover:text-crimson transition-colors font-dm text-sm">
+          Home
+        </a>
+        <a href="/#writeups" class="text-snow hover:text-crimson transition-colors font-dm text-sm">
+          Write-ups
+        </a>
+        <a href="/about" class="text-snow hover:text-crimson transition-colors font-dm text-sm">
+          About
+        </a>
+        <a
+          href="https://github.com/livewriteups/livewriteups/issues/new?labels=submission&template=writeup-submission.md"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="px-4 py-2 bg-crimson text-snow rounded hover:bg-scarlet transition-colors font-dm text-sm focus-ring"
+        >
+          Submit
+        </a>
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <button
+        id="mobile-menu-toggle"
+        class="md:hidden p-2 text-snow hover:text-crimson transition-colors focus-ring rounded"
+        aria-label="Toggle navigation menu"
+      >
+        <LucideIcon name="menu" class="w-6 h-6" />
+      </button>
+    </div>
+
+    <!-- Mobile Navigation -->
+    <div
+      id="mobile-menu"
+      class="hidden md:hidden flex flex-col gap-4 py-4 border-t border-slate/20"
+    >
+      <a href="/" class="text-snow hover:text-crimson transition-colors font-dm">
+        Home
+      </a>
+      <a href="/#writeups" class="text-snow hover:text-crimson transition-colors font-dm">
+        Write-ups
+      </a>
+      <a href="/about" class="text-snow hover:text-crimson transition-colors font-dm">
+        About
+      </a>
+      <a
+        href="https://github.com/livewriteups/livewriteups/issues/new?labels=submission&template=writeup-submission.md"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="px-4 py-2 bg-crimson text-snow rounded hover:bg-scarlet transition-colors font-dm text-center"
+      >
+        Submit a Write-up
+      </a>
+    </div>
+  </div>
+</nav>
+
+<script>
+  const toggleBtn = document.getElementById('mobile-menu-toggle');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  toggleBtn?.addEventListener('click', () => {
+    const isHidden = mobileMenu?.classList.contains('hidden');
+    if (isHidden) {
+      mobileMenu?.classList.remove('hidden');
+    } else {
+      mobileMenu?.classList.add('hidden');
+    }
+  });
+
+  // Close menu when clicking on a link
+  const mobileLinks = mobileMenu?.querySelectorAll('a');
+  mobileLinks?.forEach((link) => {
+    link.addEventListener('click', () => {
+      mobileMenu?.classList.add('hidden');
+    });
+  });
+</script>

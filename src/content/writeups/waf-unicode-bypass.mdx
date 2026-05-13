@@ -1,0 +1,52 @@
+---
+title: "Bypassing a WAF with Unicode Normalization"
+description: "A practical walkthrough of abusing normalization quirks to get a payload past a strict web application firewall."
+publishedAt: 2026-04-28
+author: "0xalpha"
+tags: ["web", "waf", "unicode"]
+difficulty: "advanced"
+platform: "HackTheBox"
+category: "Web"
+coverImage: "./waf-unicode-cover.svg"
+coverAlt: "Abstract illustration of a WAF bypass write-up"
+readingTime: 8
+draft: false
+---
+
+import DecisionPoint from '../../components/writeup/DecisionPoint.astro';
+
+## Reconnaissance
+
+The first thing I wanted to know was whether the application normalized encoded input before the firewall inspected it. If the firewall and backend disagreed on character handling, that would be the narrowest path to bypass.
+
+```http
+GET /search?q=%C3%A9 HTTP/1.1
+Host: target.local
+```
+
+The response timing suggested the application reached the backend, but the WAF only reacted to a subset of payload shapes.
+
+<DecisionPoint
+  question="Should I keep probing the filter or jump straight to injection payloads?"
+  chosen="Probe the filter first with harmless normalization edge cases"
+  reason="If the WAF was rewriting the input, a direct payload would waste attempts and make the signal harder to read."
+  alternatives={["Send a direct SQL injection payload", "Move to a different endpoint"]}
+/>
+
+## Exploitation Path
+
+I started chaining lookalike characters with percent-encoding. The key was not the payload itself, but the mismatch in where the normalization occurred.
+
+<DecisionPoint
+  question="Which payload family is most likely to expose a parser mismatch?"
+  chosen="UTF-8 lookalikes wrapped in a benign query shape"
+  reason="A low-noise probe made it easier to distinguish a blocked pattern from a rejected parameter format."
+  alternatives={["Longer SQL payloads", "Binary content injection", "Header-based injection"]}
+/>
+
+```javascript
+const probe = '/search?q=' + encodeURIComponent('\u00e9');
+console.log(probe);
+```
+
+The final request produced the same backend behavior without triggering the firewall rule that had blocked every previous attempt.

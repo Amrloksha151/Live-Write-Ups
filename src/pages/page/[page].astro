@@ -1,0 +1,47 @@
+---
+import Base from '../../layouts/Base.astro';
+import Navbar from '../../components/layout/Navbar.astro';
+import Footer from '../../components/layout/Footer.astro';
+import HomePage from '../../components/home/HomePage.astro';
+import { getPublishedWriteups, paginateWriteups } from '../../lib/writeups';
+
+export async function getStaticPaths() {
+  const writeups = await getPublishedWriteups();
+  const totalPages = Math.max(1, Math.ceil(writeups.length / 12));
+
+  return Array.from({ length: Math.max(totalPages - 1, 0) }, (_, index) => {
+    const currentPage = index + 2;
+    const { pageItems, prevUrl, nextUrl } = paginateWriteups(writeups, currentPage);
+
+    return {
+      params: { page: String(currentPage) },
+      props: {
+        pageItems,
+        currentPage,
+        totalPages,
+        prevUrl,
+        nextUrl,
+      },
+    };
+  });
+}
+
+const { pageItems, currentPage, totalPages, prevUrl, nextUrl } = Astro.props;
+---
+
+<Base
+  title={`Page ${currentPage} of Live Write Ups`}
+  description="Free cybersecurity write-ups focused on decision-making, not just commands."
+>
+  <Navbar />
+  <main>
+    <HomePage
+      writeups={pageItems}
+      currentPage={currentPage}
+      lastPage={totalPages}
+      prevUrl={prevUrl}
+      nextUrl={nextUrl}
+    />
+  </main>
+  <Footer />
+</Base>

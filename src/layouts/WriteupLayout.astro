@@ -1,0 +1,108 @@
+---
+import { Image } from 'astro:assets';
+import WriteupHeader from '../components/writeup/WriteupHeader.astro';
+
+export interface Props {
+  frontmatter: {
+    title: string;
+    author: string;
+    publishedAt: Date;
+    updatedAt?: Date;
+    readingTime?: number;
+    tags: string[];
+    difficulty: 'beginner' | 'intermediate' | 'advanced' | 'expert';
+    platform: string;
+    category: string;
+    coverImage?: any;
+    coverAlt?: string;
+  };
+  headings?: { depth: number; slug: string; text: string }[];
+  prevPost?: { href: string; title: string };
+  nextPost?: { href: string; title: string };
+}
+
+const { frontmatter, headings = [], prevPost, nextPost } = Astro.props;
+const tocHeadings = headings.filter((heading) => heading.depth === 2);
+---
+
+<article class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-12">
+  {frontmatter.coverImage && (
+    <div class="mb-8 overflow-hidden rounded-2xl border border-slate/20 shadow-sm bg-space/5">
+      <Image
+        src={frontmatter.coverImage}
+        alt={frontmatter.coverAlt ?? frontmatter.title}
+        class="w-full h-auto aspect-[21/9] object-cover"
+      />
+    </div>
+  )}
+
+  <WriteupHeader
+    title={frontmatter.title}
+    author={frontmatter.author}
+    publishedAt={frontmatter.publishedAt}
+    updatedAt={frontmatter.updatedAt}
+    readingTime={frontmatter.readingTime}
+    tags={frontmatter.tags}
+    difficulty={frontmatter.difficulty}
+    platform={frontmatter.platform}
+    category={frontmatter.category}
+  />
+
+  <div class="grid gap-12 lg:grid-cols-[minmax(0,1fr)_280px] items-start">
+    <div>
+      <div class="prose prose-lg max-w-none">
+        <slot />
+      </div>
+
+      {(prevPost || nextPost) && (
+        <nav class="mt-12 flex flex-col gap-4 sm:flex-row sm:justify-between border-t border-slate/10 pt-6" aria-label="Write-up navigation">
+          {prevPost ? (
+            <a
+              href={prevPost.href}
+              class="rounded-lg border border-slate/20 bg-snow px-4 py-3 text-sm font-dm text-space transition-colors hover:border-crimson hover:text-crimson focus-ring"
+            >
+              <span class="block text-xs uppercase tracking-wide text-slate">Previous</span>
+              <span class="block font-semibold">{prevPost.title}</span>
+            </a>
+          ) : (
+            <span />
+          )}
+
+          {nextPost ? (
+            <a
+              href={nextPost.href}
+              class="rounded-lg border border-slate/20 bg-snow px-4 py-3 text-sm font-dm text-space transition-colors hover:border-crimson hover:text-crimson focus-ring sm:text-right"
+            >
+              <span class="block text-xs uppercase tracking-wide text-slate">Next</span>
+              <span class="block font-semibold">{nextPost.title}</span>
+            </a>
+          ) : (
+            <span />
+          )}
+        </nav>
+      )}
+    </div>
+
+    <aside class="lg:sticky lg:top-24">
+      <details class="rounded-xl border border-slate/20 bg-snow p-4 open:shadow-sm lg:open:shadow-none">
+        <summary class="cursor-pointer list-none font-syne font-bold text-space focus-ring">
+          Table of Contents
+        </summary>
+        <nav class="mt-4 space-y-3" aria-label="Table of contents">
+          {tocHeadings.length > 0 ? (
+            tocHeadings.map((heading) => (
+              <a
+                href={`#${heading.slug}`}
+                class="block text-sm font-dm text-slate transition-colors hover:text-crimson focus-ring"
+              >
+                {heading.text}
+              </a>
+            ))
+          ) : (
+            <p class="text-sm font-dm text-slate">No sections yet.</p>
+          )}
+        </nav>
+      </details>
+    </aside>
+  </div>
+</article>

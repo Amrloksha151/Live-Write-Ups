@@ -1,0 +1,57 @@
+---
+import LucideIcon from '../ui/LucideIcon.astro';
+
+export interface Props {
+  question: string;
+  chosen: string;
+  reason: string;
+  alternatives: string[];
+}
+
+const { question, chosen, reason, alternatives } = Astro.props;
+---
+
+<div class="my-8 rounded-lg bg-snow border-l-4 border-crimson p-6 shadow-sm">
+  <!-- Header with Icon and Label -->
+  <div class="flex items-center gap-3 mb-4">
+    <LucideIcon name="lightbulb" class="w-5 h-5 text-crimson flex-shrink-0" />
+    <p class="text-xs font-syne font-bold text-crimson uppercase tracking-wide">Decision Point</p>
+  </div>
+
+  <!-- Question -->
+  <h3 class="text-lg font-syne font-bold text-space mb-4">
+    {question}
+  </h3>
+
+  <!-- Decision Breakdown -->
+  <div class="space-y-3 mb-4">
+    <!-- Chosen Path -->
+    <div class="flex items-start gap-3">
+      <LucideIcon name="circle-check" class="w-5 h-5 text-crimson flex-shrink-0 mt-0.5" />
+      <div>
+        <p class="text-xs font-dm font-semibold text-slate uppercase">Chosen Path</p>
+        <p class="text-sm font-dm text-space">{chosen}</p>
+      </div>
+    </div>
+
+    <!-- Alternatives -->
+    {
+      alternatives.map((alt) => (
+        <div class="flex items-start gap-3">
+          <LucideIcon name="circle-x" class="w-5 h-5 text-slate flex-shrink-0 mt-0.5" />
+          <div>
+            <p class="text-xs font-dm font-semibold text-slate uppercase">Alternative</p>
+            <p class="text-sm font-dm text-space/80">{alt}</p>
+          </div>
+        </div>
+      ))
+    }
+  </div>
+
+  <!-- Reason (Italic callout) -->
+  <div class="border-t border-slate/10 pt-4">
+    <p class="text-sm font-dm text-space italic text-slate">
+      <span class="font-semibold text-space">Why:</span> {reason}
+    </p>
+  </div>
+</div>

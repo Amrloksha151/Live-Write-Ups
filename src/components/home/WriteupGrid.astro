@@ -1,0 +1,60 @@
+---
+import LucideIcon from '../ui/LucideIcon.astro';
+import WriteupCard from '../writeup/WriteupCard.astro';
+import Pagination from '../ui/Pagination.astro';
+
+export interface Props {
+  writeups: any[];
+  currentPage: number;
+  lastPage: number;
+  prevUrl?: string;
+  nextUrl?: string;
+}
+
+const { writeups, currentPage, lastPage, prevUrl, nextUrl } = Astro.props;
+---
+
+<section id="writeups" class="bg-snow py-16">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <!-- Section Heading -->
+    <h2 class="text-4xl font-syne font-bold text-space mb-12">
+      Recent Write-ups
+    </h2>
+
+    <!-- Grid or Empty State -->
+    {
+      writeups.length === 0 ? (
+        <div class="flex flex-col items-center justify-center py-12 gap-4">
+          <LucideIcon name="file-search" class="w-12 h-12 text-slate" />
+          <p class="text-lg text-slate font-dm">No write-ups found yet.</p>
+          <p class="text-sm text-slate/70 font-dm">Check back soon for new content!</p>
+        </div>
+      ) : (
+        <>
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+            {writeups.map((writeup) => (
+              <WriteupCard
+                title={writeup.data.title}
+                description={writeup.data.description}
+                author={writeup.data.author}
+                publishedAt={writeup.data.publishedAt}
+                tags={writeup.data.tags}
+                difficulty={writeup.data.difficulty}
+                slug={writeup.slug}
+                coverImage={writeup.data.coverImage}
+              />
+            ))}
+          </div>
+
+          <!-- Pagination -->
+          <Pagination
+            currentPage={currentPage}
+            lastPage={lastPage}
+            prevUrl={prevUrl}
+            nextUrl={nextUrl}
+          />
+        </>
+      )
+    }
+  </div>
+</section>

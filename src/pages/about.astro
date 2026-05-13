@@ -1,0 +1,21 @@
+---
+import Base from '../layouts/Base.astro';
+import Navbar from '../components/layout/Navbar.astro';
+import Footer from '../components/layout/Footer.astro';
+---
+
+<Base title="About" description="About the Live Write Ups project.">
+  <Navbar />
+  <main class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-16">
+    <h1 class="text-4xl font-syne font-bold text-space mb-6">About</h1>
+    <div class="prose prose-lg max-w-none">
+      <p>
+        Live Write Ups is a free, open platform for cybersecurity and CTF write-ups that focuses on the reasoning behind each move.
+      </p>
+      <p>
+        The site uses static MDX content, Tailwind styling, and Lucide icons to keep the presentation unified and fast.
+      </p>
+    </div>
+  </main>
+  <Footer />
+</Base>

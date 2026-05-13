@@ -1,0 +1,42 @@
+---
+title: "A Safer XSS Sandbox That Still Taught the Right Lesson"
+description: "Using a controlled sandbox to demonstrate stored XSS behavior without making the exploit path harder to understand."
+publishedAt: 2026-05-02
+author: "mira"
+tags: ["xss", "sandbox", "client-side"]
+difficulty: "beginner"
+platform: "CTF"
+category: "Web"
+coverImage: "./xss-sandbox-cover.svg"
+coverAlt: "Abstract illustration of an XSS sandbox"
+readingTime: 5
+draft: false
+---
+
+import DecisionPoint from '../../components/writeup/DecisionPoint.astro';
+
+## Sandbox First
+
+I wanted the write-up to show the exploit path without encouraging unsafe experimentation outside the lab. A sandbox was the cleanest way to keep the narrative honest.
+
+<DecisionPoint
+  question="Should the demo prioritize realism or safety?"
+  chosen="Safety first, with realistic control flow"
+  reason="The reader still learns the attack sequence, but the environment stays constrained and reproducible."
+  alternatives={["Run it against a live app", "Skip the exploit path entirely"]}
+/>
+
+## Payload Shape
+
+The payload was intentionally small so the behavior was easy to trace.
+
+```html
+<img src=x onerror="console.log('sandbox xss')" />
+```
+
+<DecisionPoint
+  question="What makes the control flow easier to follow for readers?"
+  chosen="Keep the payload small and the explanation around it large"
+  reason="The value of the article is in the reasoning and the observation, not in novelty of the payload."
+  alternatives={["Use a more complex payload", "Hide the exploit details"]}
+/>
