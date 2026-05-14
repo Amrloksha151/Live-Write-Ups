@@ -14,6 +14,9 @@ draft: false
 ---
 
 import DecisionPoint from '../../components/writeup/DecisionPoint.astro';
+import Stage from '../../components/writeup/Stage.astro';
+
+<Stage title="Reconnaissance" description="Understanding the WAF's normalization behavior">
 
 ## Reconnaissance
 
@@ -26,6 +29,8 @@ Host: target.local
 
 The response timing suggested the application reached the backend, but the WAF only reacted to a subset of payload shapes.
 
+This mismatch was the key. The WAF was analyzing traffic at one layer, but the backend was normalizing at another.
+
 <DecisionPoint
   question="Should I keep probing the filter or jump straight to injection payloads?"
   chosen="Probe the filter first with harmless normalization edge cases"
@@ -33,9 +38,15 @@ The response timing suggested the application reached the backend, but the WAF o
   alternatives={["Send a direct SQL injection payload", "Move to a different endpoint"]}
 />
 
+</Stage>
+
+<Stage title="Exploitation Path" description="Chaining lookalike characters to bypass detection">
+
 ## Exploitation Path
 
 I started chaining lookalike characters with percent-encoding. The key was not the payload itself, but the mismatch in where the normalization occurred.
+
+The breakthrough: Unicode provides multiple ways to represent the same character. If I sent the "wrong" representation, the WAF might pass it through, but the backend would normalize it back to the intended form.
 
 <DecisionPoint
   question="Which payload family is most likely to expose a parser mismatch?"
@@ -47,6 +58,9 @@ I started chaining lookalike characters with percent-encoding. The key was not t
 ```javascript
 const probe = '/search?q=' + encodeURIComponent('\u00e9');
 console.log(probe);
+// Output: /search?q=%C3%A9
 ```
 
-The final request produced the same backend behavior without triggering the firewall rule that had blocked every previous attempt.
+The final request produced the same backend behavior without triggering the firewall rule that had blocked every previous attempt. **The WAF had been normalized to expect decomposed Unicode, but I was sending composed Unicode.**
+
+</Stage>

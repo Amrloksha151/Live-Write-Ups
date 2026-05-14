@@ -1,0 +1,157 @@
+---
+/**
+ * [stageNumber].astro
+ * 
+ * Dynamic route for displaying individual stages of a write-up.
+ * URL: /writeups/{slug}/stage/{stageNumber}
+ * 
+ * Pre-renders all {slug, stageNumber} combinations at build time.
+ */
+
+import { getCollection, render } from 'astro:content';
+import { extractStages, getStage, getTotalStages, validateStages } from '@/lib/stageParser';
+import StageProgress from '@/components/writeup/StageProgress.astro';
+import StageNav from '@/components/writeup/StageNav.astro';
+import WriteupHeader from '@/components/writeup/WriteupHeader.astro';
+import Navbar from '@/components/layout/Navbar.astro';
+import Base from '@/layouts/Base.astro';
+
+interface Props {
+  slug: string;
+  stageNumber: number;
+}
+
+export async function getStaticPaths() {
+  const writeups = await getCollection('writeups', ({ data }) => !data.draft);
+
+  const paths: any[] = [];
+
+  for (const writeup of writeups) {
+    const { id, body } = writeup;
+
+    try {
+      // Extract stages from the raw MDX body (body may be undefined)
+      const stages = extractStages(body ?? '');
+      validateStages(stages);
+
+      // Generate a path for each stage of this writeup
+      for (let i = 1; i <= stages.length; i++) {
+        paths.push({
+          params: { slug: id, stageNumber: String(i) },
+          props: { slug: id, stageNumber: i },
+        });
+      }
+    } catch (err) {
+      console.error(`Error processing write-up "${id}":`, err);
+    }
+  }
+
+  return paths;
+}
+
+const { slug, stageNumber } = Astro.params;
+const stageNum = Number(stageNumber || '1');
+
+// Fetch the writeup collection
+const writeups = await getCollection('writeups', ({ data }) => !data.draft);
+const writeup = writeups.find((w) => w.id === slug);
+
+if (!writeup) {
+  return Astro.redirect('/');
+}
+
+// Extract stages
+const stages = extractStages(writeup.body ?? '');
+validateStages(stages);
+
+// Get the requested stage
+const stage = getStage(stages, stageNum);
+if (!stage) {
+  return Astro.redirect(`/writeups/${slug}/stage/1`);
+}
+
+const totalStages = getTotalStages(stages);
+
+// Prepare page metadata
+const pageTitle = `${writeup.data.title} — Stage ${stageNum} of ${totalStages}`;
+const pageDescription = stage.description || `Stage ${stageNumber}: ${stage.title}`;
+
+// Render the full MDX content for access to components
+const { Content: FullContent } = await render(writeup);
+
+// Create a temporary wrapper to extract only this stage's content
+// We'll pass the stage content directly; the Stage component will be transparent
+---
+
+<Base title={pageTitle} description={pageDescription}>
+  <Navbar />
+  <div class="min-h-screen bg-gradient-to-b from-snow to-white">
+    <!-- Header -->
+    <header class="bg-space text-snow py-8 md:py-12">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <WriteupHeader
+          title={writeup.data.title}
+          author={writeup.data.author}
+          publishedAt={writeup.data.publishedAt}
+          tags={writeup.data.tags}
+          difficulty={writeup.data.difficulty}
+          platform={writeup.data.platform}
+          category={writeup.data.category}
+          readingTime={writeup.data.readingTime}
+        />
+      </div>
+    </header>
+
+    <!-- Content -->
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <!-- Progress Indicator -->
+          <StageProgress currentStage={stageNum} totalStages={totalStages} />
+
+      <!-- Stage Title -->
+      <div class="mb-8">
+        <h2 class="text-3xl md:text-4xl font-syne font-bold text-space mb-2">
+          {stage.title}
+        </h2>
+        {stage.description && (
+          <p class="text-lg text-slate leading-relaxed">{stage.description}</p>
+        )}
+      </div>
+
+      <!-- Stage Content: render the full MDX and hide other stages client-side -->
+      <article class="prose prose-lg max-w-none prose-space mb-12" id="stage-content-root">
+        <FullContent />
+      </article>
+
+      <script type="text/javascript" define:vars={{ stageNum }}>
+        (function () {
+          try {
+            const desired = stageNum;
+            const root = document.getElementById('stage-content-root');
+            if (!root) return;
+            const stages = root.querySelectorAll('.stage');
+            if (!stages || stages.length === 0) return;
+            // Ensure index is within bounds
+            const idx = Math.max(0, Math.min(stages.length - 1, desired - 1));
+            stages.forEach((el, i) => {
+              if (i === idx) {
+                el.style.display = '';
+              } else {
+                el.style.display = 'none';
+              }
+            });
+          } catch (e) {
+            console.error('Stage switching script error:', e);
+          }
+        })();
+      </script>
+
+      <!-- Stage Navigation -->
+      <StageNav slug={slug} currentStage={stageNum} totalStages={totalStages} />
+    </main>
+  </div>
+</Base>
+
+<style>
+  /* Prose styling is handled by Tailwind typography plugin globally */
+  /* No custom prose overrides needed at component level */
+</style>

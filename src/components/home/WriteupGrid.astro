@@ -40,7 +40,7 @@ const { writeups, currentPage, lastPage, prevUrl, nextUrl } = Astro.props;
                 publishedAt={writeup.data.publishedAt}
                 tags={writeup.data.tags}
                 difficulty={writeup.data.difficulty}
-                slug={writeup.slug}
+                slug={writeup.id}
                 coverImage={writeup.data.coverImage}
               />
             ))}

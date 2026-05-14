@@ -14,10 +14,15 @@ draft: false
 ---
 
 import DecisionPoint from '../../components/writeup/DecisionPoint.astro';
+import Stage from '../../components/writeup/Stage.astro';
 
-## Sandbox First
+<Stage title="Design Approach" description="Deciding between safety and realism">
+
+## The Challenge
 
 I wanted the write-up to show the exploit path without encouraging unsafe experimentation outside the lab. A sandbox was the cleanest way to keep the narrative honest.
+
+The question wasn't whether to use a sandbox—it was how to ensure readers still learned the attack sequence while staying safe.
 
 <DecisionPoint
   question="Should the demo prioritize realism or safety?"
@@ -25,6 +30,10 @@ I wanted the write-up to show the exploit path without encouraging unsafe experi
   reason="The reader still learns the attack sequence, but the environment stays constrained and reproducible."
   alternatives={["Run it against a live app", "Skip the exploit path entirely"]}
 />
+
+</Stage>
+
+<Stage title="Payload Implementation" description="Keeping it simple and traceable">
 
 ## Payload Shape
 
@@ -34,9 +43,27 @@ The payload was intentionally small so the behavior was easy to trace.
 <img src=x onerror="console.log('sandbox xss')" />
 ```
 
+This tiny payload demonstrates the core concept: **an attribute that triggers code execution**. The `onerror` handler fires when the image fails to load (which it always will, since `src=x` is invalid).
+
 <DecisionPoint
   question="What makes the control flow easier to follow for readers?"
   chosen="Keep the payload small and the explanation around it large"
   reason="The value of the article is in the reasoning and the observation, not in novelty of the payload."
   alternatives={["Use a more complex payload", "Hide the exploit details"]}
 />
+
+</Stage>
+
+<Stage title="Key Learnings" description="Takeaways from the implementation">
+
+## What We Learned
+
+By constraining the payload and the environment, we achieved clarity. Readers can:
+- **See the exact vector** — the `onerror` handler
+- **Understand the flow** — attribute → parse → execute
+- **Experiment safely** — the sandbox prevents accidental harm
+- **Apply the lesson** — they'll recognize this pattern in real code
+
+This approach balances **educational honesty** with **responsible teaching**. You get the exploit without the danger.
+
+</Stage>

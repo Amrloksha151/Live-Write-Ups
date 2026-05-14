@@ -6,52 +6,168 @@ export interface Props {
   chosen: string;
   reason: string;
   alternatives: string[];
+  explanation?: string;
+  showHint?: boolean;
 }
 
-const { question, chosen, reason, alternatives } = Astro.props;
+const { 
+  question, 
+  chosen, 
+  reason, 
+  alternatives, 
+  explanation = reason,
+  showHint = true 
+} = Astro.props;
+
+// Create unique ID for this decision point to handle multiple on one page
+const uniqueId = Math.random().toString(36).slice(2, 9);
+
+// Build the full option list: chosen + alternatives
+// Shuffle to avoid patterns where correct is always last
+const allOptions = [chosen, ...alternatives];
+const shuffledOptions = allOptions.sort(() => Math.random() - 0.5);
+
+// Track which index is correct in the shuffled array
+const correctIndex = shuffledOptions.indexOf(chosen);
 ---
 
-<div class="my-8 rounded-lg bg-snow border-l-4 border-crimson p-6 shadow-sm">
+<div class="decision-point my-8 rounded-lg bg-snow border-l-4 border-crimson p-6 shadow-sm" data-decision-id={uniqueId}>
   <!-- Header with Icon and Label -->
   <div class="flex items-center gap-3 mb-4">
     <LucideIcon name="lightbulb" class="w-5 h-5 text-crimson flex-shrink-0" />
-    <p class="text-xs font-syne font-bold text-crimson uppercase tracking-wide">Decision Point</p>
+    <p class="text-xs font-syne font-bold text-crimson uppercase tracking-wide">Decision Point Quiz</p>
   </div>
 
   <!-- Question -->
-  <h3 class="text-lg font-syne font-bold text-space mb-4">
+  <h3 class="text-lg font-syne font-bold text-space mb-6">
     {question}
   </h3>
 
-  <!-- Decision Breakdown -->
-  <div class="space-y-3 mb-4">
-    <!-- Chosen Path -->
-    <div class="flex items-start gap-3">
-      <LucideIcon name="circle-check" class="w-5 h-5 text-crimson flex-shrink-0 mt-0.5" />
-      <div>
-        <p class="text-xs font-dm font-semibold text-slate uppercase">Chosen Path</p>
-        <p class="text-sm font-dm text-space">{chosen}</p>
-      </div>
+  <!-- Options Container -->
+  <div class="space-y-3 mb-6" role="group" aria-label="Decision options">
+    {shuffledOptions.map((option, idx) => (
+      <button
+        type="button"
+        class="decision-option w-full text-left px-5 py-4 rounded-lg bg-white border-2 border-slate/30 hover:border-crimson/50 hover:bg-slate/5 transition-all cursor-pointer"
+        data-option-index={idx}
+        data-is-correct={idx === correctIndex}
+        aria-pressed="false"
+      >
+        <div class="flex items-start gap-3">
+          <div class="flex-shrink-0 w-5 h-5 rounded-full border-2 border-slate/40 mt-0.5 transition-colors" />
+          <p class="text-sm font-dm text-space leading-relaxed">{option}</p>
+        </div>
+      </button>
+    ))}
+  </div>
+
+  <!-- Feedback Section (hidden until selection) -->
+  <div 
+    class="decision-feedback hidden border-t border-slate/10 pt-6 space-y-3"
+    data-feedback-container={uniqueId}
+  >
+    <!-- Result Badge -->
+    <div class="decision-result flex items-center gap-2">
+      <div class="result-icon w-5 h-5 rounded-full" />
+      <span class="result-text text-sm font-dm font-semibold uppercase tracking-wide" />
     </div>
 
-    <!-- Alternatives -->
-    {
-      alternatives.map((alt) => (
-        <div class="flex items-start gap-3">
-          <LucideIcon name="circle-x" class="w-5 h-5 text-slate flex-shrink-0 mt-0.5" />
-          <div>
-            <p class="text-xs font-dm font-semibold text-slate uppercase">Alternative</p>
-            <p class="text-sm font-dm text-space/80">{alt}</p>
-          </div>
-        </div>
-      ))
-    }
-  </div>
-
-  <!-- Reason (Italic callout) -->
-  <div class="border-t border-slate/10 pt-4">
-    <p class="text-sm font-dm text-space italic text-slate">
-      <span class="font-semibold text-space">Why:</span> {reason}
+    <!-- Explanation -->
+    <p class="text-sm font-dm text-space/90 leading-relaxed italic">
+      <span class="font-semibold text-space">Why:</span> {explanation}
     </p>
+
+    <!-- Try Again Button (for incorrect answers) -->
+    <button
+      type="button"
+      class="try-again-btn hidden mt-4 px-4 py-2 bg-slate/10 text-slate hover:bg-slate/20 rounded-lg font-dm text-sm font-medium transition-colors"
+      data-decision-id={uniqueId}
+    >
+      Try Another Answer
+    </button>
   </div>
 </div>
+
+<script define:vars={{ uniqueId, correctIndex }}>
+  // Minimal vanilla JS for DecisionPoint interactivity
+  const container = document.querySelector(`[data-decision-id="${uniqueId}"]`);
+  if (!container) {
+    console.error(`DecisionPoint container not found: ${uniqueId}`);
+  } else {
+    const options = container.querySelectorAll('.decision-option');
+    const feedbackContainer = container.querySelector(`[data-feedback-container="${uniqueId}"]`);
+    const resultIcon = feedbackContainer.querySelector('.result-icon');
+    const resultText = feedbackContainer.querySelector('.result-text');
+    const tryAgainBtn = feedbackContainer.querySelector('.try-again-btn');
+
+    options.forEach((option) => {
+      option.addEventListener('click', () => {
+        // Prevent re-selection after answered
+        if (feedbackContainer.classList.contains('hidden') === false) {
+          return;
+        }
+
+        const optionIndex = parseInt(option.getAttribute('data-option-index'), 10);
+        const isCorrect = optionIndex === correctIndex;
+
+        // Show feedback
+        feedbackContainer.classList.remove('hidden');
+
+        // Update result styling
+        if (isCorrect) {
+          resultIcon.classList.add('bg-green-500', 'border-green-600');
+          resultIcon.innerHTML = '✓';
+          resultText.textContent = 'Correct!';
+          resultText.classList.add('text-green-700');
+          option.classList.add('border-green-500', 'bg-green-50');
+          option.classList.remove('hover:border-crimson/50', 'hover:bg-slate/5', 'cursor-pointer');
+          option.disabled = true;
+        } else {
+          resultIcon.classList.add('bg-red-500', 'border-red-600');
+          resultIcon.innerHTML = '✗';
+          resultText.textContent = 'Not Quite!';
+          resultText.classList.add('text-red-700');
+          option.classList.add('border-red-400', 'bg-red-50');
+          option.classList.remove('hover:border-crimson/50', 'hover:bg-slate/5');
+          tryAgainBtn.classList.remove('hidden');
+        }
+
+        // Disable all options
+        options.forEach((opt) => {
+          opt.disabled = true;
+          opt.classList.remove('hover:border-crimson/50', 'hover:bg-slate/5', 'cursor-pointer');
+        });
+      });
+    });
+
+    // Try Again button resets state
+    tryAgainBtn.addEventListener('click', () => {
+      feedbackContainer.classList.add('hidden');
+      resultIcon.className = 'result-icon w-5 h-5 rounded-full';
+      resultText.textContent = '';
+      resultText.className = 'result-text text-sm font-dm font-semibold uppercase tracking-wide';
+      tryAgainBtn.classList.add('hidden');
+
+      options.forEach((opt) => {
+        opt.disabled = false;
+        opt.classList.remove('border-green-500', 'bg-green-50', 'border-red-400', 'bg-red-50');
+        opt.classList.add('hover:border-crimson/50', 'hover:bg-slate/5', 'cursor-pointer');
+        opt.setAttribute('aria-pressed', 'false');
+      });
+    });
+  }
+</script>
+
+<style>
+  .decision-point {
+    position: relative;
+  }
+
+  .decision-option {
+    transition: all 0.2s ease-out;
+  }
+
+  .decision-option:disabled {
+    cursor: not-allowed;
+  }
+</style>

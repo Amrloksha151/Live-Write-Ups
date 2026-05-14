@@ -14,6 +14,9 @@ draft: false
 ---
 
 import DecisionPoint from '../../components/writeup/DecisionPoint.astro';
+import Stage from '../../components/writeup/Stage.astro';
+
+<Stage title="Noise Reduction" description="Finding the signal in the alerts">
 
 ## Initial Noise Reduction
 
@@ -32,9 +35,15 @@ The first clue was a path traversal attempt that appeared only after a debug end
   alternatives={["Hit the endpoint directly", "Search the web cache", "Restart the service"]}
 />
 
+</Stage>
+
+<Stage title="Timeline Correlation" description="Connecting events across multiple logs">
+
 ## Correlating the Timeline
 
 Once the noise was reduced, the same user agent appeared in three places: the build logs, the web server access logs, and the auth failures.
+
+The breakthrough came when I realized the user agent wasn't unique—but its **timing** was.
 
 <DecisionPoint
   question="What is the best next step after identifying the repeated agent string?"
@@ -47,3 +56,7 @@ Once the noise was reduced, the same user agent appeared in three places: the bu
 2026-03-14T11:32:08Z  debug endpoint enabled
 2026-03-14T11:35:44Z  repeated request sequence begins
 ```
+
+The exploit didn't work until the debug endpoint was active. That three-minute window told the whole story.
+
+</Stage>

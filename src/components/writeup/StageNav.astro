@@ -1,0 +1,95 @@
+---
+/**
+ * StageNav.astro
+ * 
+ * Navigation component for moving between stages.
+ * Disables Previous on stage 1, Next on final stage.
+ * Placed at the bottom of each stage view.
+ */
+
+export interface Props {
+  slug: string;
+  currentStage: number;
+  totalStages: number;
+}
+
+const { slug, currentStage, totalStages } = Astro.props;
+
+const prevUrl = currentStage > 1 ? `/writeups/${slug}/stage/${currentStage - 1}` : null;
+const nextUrl = currentStage < totalStages ? `/writeups/${slug}/stage/${currentStage + 1}` : null;
+
+const isPrevDisabled = currentStage === 1;
+const isNextDisabled = currentStage === totalStages;
+---
+
+<div class="stage-nav mt-12 pt-8 border-t border-slate/20 flex items-center justify-between">
+  <!-- Previous Button -->
+  {
+    !isPrevDisabled ? (
+      <a
+        href={prevUrl}
+        class="inline-flex items-center gap-2 px-6 py-2.5 bg-snow text-space border border-slate/30 rounded-lg font-dm font-medium hover:bg-slate/5 hover:border-slate/50 transition-colors"
+        aria-label={`Go to stage ${currentStage - 1}`}
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        Previous Stage
+      </a>
+    ) : (
+      <button
+        disabled
+        class="inline-flex items-center gap-2 px-6 py-2.5 bg-snow/50 text-slate/40 border border-slate/10 rounded-lg font-dm font-medium cursor-not-allowed"
+        aria-disabled="true"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        Previous Stage
+      </button>
+    )
+  }
+
+  <!-- Stage Indicator -->
+  <div class="text-center">
+    <p class="text-xs font-dm text-slate uppercase tracking-wide">
+      {currentStage} / {totalStages}
+    </p>
+  </div>
+
+  <!-- Next Button -->
+  {
+    !isNextDisabled ? (
+      <a
+        href={nextUrl}
+        class="inline-flex items-center gap-2 px-6 py-2.5 bg-crimson text-snow rounded-lg font-dm font-medium hover:bg-scarlet transition-colors"
+        aria-label={`Go to stage ${currentStage + 1}`}
+      >
+        Next Stage
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </a>
+    ) : (
+      <a
+        href={`/writeups/${slug}`}
+        class="inline-flex items-center gap-2 px-6 py-2.5 bg-scarlet text-snow rounded-lg font-dm font-medium hover:bg-crimson transition-colors"
+        aria-label="Back to write-up overview"
+      >
+        Write-up Complete
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+      </a>
+    )
+  }
+</div>
+
+<style>
+  .stage-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+</style>

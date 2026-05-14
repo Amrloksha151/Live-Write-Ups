@@ -1,0 +1,42 @@
+---
+/**
+ * StageProgress.astro
+ * 
+ * Displays the current stage number and total stages with a visual progress indicator.
+ * Placed at the top of each stage view.
+ */
+
+export interface Props {
+  currentStage: number;
+  totalStages: number;
+}
+
+const { currentStage, totalStages } = Astro.props;
+const progressPercentage = Math.round((currentStage / totalStages) * 100);
+---
+
+<div class="stage-progress space-y-3">
+  <!-- Header with Stage Counter -->
+  <div class="flex items-center justify-between">
+    <h2 class="text-sm font-dm font-semibold text-slate uppercase tracking-wide">
+      Stage {currentStage} of {totalStages}
+    </h2>
+    <span class="text-xs font-dm text-slate/70">
+      {Math.round((currentStage / totalStages) * 100)}% complete
+    </span>
+  </div>
+
+  <!-- Progress Bar -->
+  <div class="h-1 w-full bg-slate/15 rounded-full overflow-hidden">
+    <div
+      class="h-full bg-gradient-to-r from-crimson to-scarlet transition-all duration-500 ease-out"
+      style={`width: ${progressPercentage}%`}
+    />
+  </div>
+</div>
+
+<style>
+  .stage-progress {
+    margin-bottom: 2rem;
+  }
+</style>

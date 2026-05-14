@@ -1,56 +1,22 @@
 ---
-import Base from '../../layouts/Base.astro';
-import Navbar from '../../components/layout/Navbar.astro';
-import Footer from '../../components/layout/Footer.astro';
-import WriteupLayout from '../../layouts/WriteupLayout.astro';
-import { getCollection, render, type CollectionEntry } from 'astro:content';
+/**
+ * [slug].astro
+ * 
+ * Deprecated: This route has been replaced by the stage-based system.
+ * Redirects /writeups/{slug} to /writeups/{slug}/stage/1
+ */
 
-type WriteupEntry = CollectionEntry<'writeups'>;
-
-export interface Props {
-  entry: WriteupEntry;
-  prevPost?: { href: string; title: string };
-  nextPost?: { href: string; title: string };
-}
+import { getCollection } from 'astro:content';
 
 export async function getStaticPaths() {
-  const writeups = (await getCollection('writeups')) as WriteupEntry[];
-  const sorted = writeups
-    .filter((entry: WriteupEntry) => !entry.data.draft)
-    .sort(
-    (a: WriteupEntry, b: WriteupEntry) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf(),
-  );
-
-  return sorted.map((entry: WriteupEntry, index: number) => {
-    const prevEntry = sorted[index + 1];
-    const nextEntry = sorted[index - 1];
-
-    return {
-      params: { slug: entry.id },
-      props: {
-        entry,
-        prevPost: prevEntry ? { href: `/writeups/${prevEntry.id}`, title: prevEntry.data.title } : undefined,
-        nextPost: nextEntry ? { href: `/writeups/${nextEntry.id}`, title: nextEntry.data.title } : undefined,
-      },
-    };
-  });
+  const writeups = await getCollection('writeups', ({ data }) => !data.draft);
+  
+  return writeups.map((entry) => ({
+    params: { slug: entry.id },
+  }));
 }
 
-const { entry, prevPost, nextPost } = Astro.props as Props;
-const { Content, headings } = await render(entry);
----
+const { slug } = Astro.params;
 
-<Base
-  title={entry.data.title}
-  description={entry.data.description}
-  ogType="article"
-  ogImage={entry.data.coverImage ? entry.data.coverImage.src : '/favicon.svg'}
->
-  <Navbar />
-  <main>
-    <WriteupLayout frontmatter={entry.data} headings={headings} prevPost={prevPost} nextPost={nextPost}>
-      <Content />
-    </WriteupLayout>
-  </main>
-  <Footer />
-</Base>
+// Redirect to the first stage
+return Astro.redirect(`/writeups/${slug}/stage/1`);

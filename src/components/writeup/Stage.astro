@@ -1,0 +1,36 @@
+---
+/**
+ * Stage.astro
+ * 
+ * MDX-compatible wrapper component for organizing write-up content into sequential stages.
+ * Used to delimit stage boundaries in MDX files; enables the stage parser to extract stages.
+ * 
+ * Usage in MDX:
+ * <Stage title="Initial Reconnaissance">
+ *   ## Content heading
+ *   Content here...
+ * </Stage>
+ */
+
+export interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<div class="stage" data-stage-title={title} data-stage-description={description || ''}>
+  <slot />
+</div>
+
+<style>
+  /* 
+    This component is structural for MDX parsing.
+    It renders minimally; actual stage rendering is handled by the route page.
+    The data-* attributes help the stage parser identify stage boundaries.
+  */
+  .stage {
+    /* Intentionally minimal styling; stage layout is handled by the page */
+  }
+</style>
