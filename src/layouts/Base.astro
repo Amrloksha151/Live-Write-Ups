@@ -24,7 +24,7 @@ const {
   canonical,
 } = Astro.props as Props;
 
-const siteUrl = 'https://livewriteups.com'; // TODO: update with actual domain
+const siteUrl = Astro.site?.toString() ?? 'https://amrloksha151.github.io/Live-Write-Ups';
 const fullTitle = title === 'Live Write Ups' ? title : `${title} | Live Write Ups`;
 const canonicalUrl = canonical ? `${siteUrl}${canonical}` : `${siteUrl}${Astro.url.pathname}`;
 ---
@@ -59,8 +59,8 @@ const canonicalUrl = canonical ? `${siteUrl}${canonical}` : `${siteUrl}${Astro.u
     <meta name="twitter:image" content={ogImage} />
 
     <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" type="image/svg+xml" href={`${Astro.url.origin}${import.meta.env.BASE_URL}favicon.svg`} />
+    <link rel="icon" href={`${Astro.url.origin}${import.meta.env.BASE_URL}favicon.ico`} />
 
     <!-- No tracking, no analytics -->
   </head>

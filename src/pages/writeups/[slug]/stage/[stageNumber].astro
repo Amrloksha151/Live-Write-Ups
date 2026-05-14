@@ -9,6 +9,7 @@
  */
 
 import { getCollection, render } from 'astro:content';
+import { withBase } from '@/lib/url';
 import { extractStages, getStage, getTotalStages, validateStages } from '@/lib/stageParser';
 import StageProgress from '@/components/writeup/StageProgress.astro';
 import StageNav from '@/components/writeup/StageNav.astro';
@@ -57,7 +58,7 @@ const writeups = await getCollection('writeups', ({ data }) => !data.draft);
 const writeup = writeups.find((w) => w.id === slug);
 
 if (!writeup) {
-  return Astro.redirect('/');
+  return Astro.redirect(withBase('/'));
 }
 
 // Extract stages
@@ -67,7 +68,7 @@ validateStages(stages);
 // Get the requested stage
 const stage = getStage(stages, stageNum);
 if (!stage) {
-  return Astro.redirect(`/writeups/${slug}/stage/1`);
+  return Astro.redirect(withBase(`/writeups/${slug}/stage/1`));
 }
 
 const totalStages = getTotalStages(stages);

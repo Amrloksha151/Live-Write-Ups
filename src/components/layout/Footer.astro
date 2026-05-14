@@ -1,4 +1,5 @@
 ---
+import { withBase } from '../../lib/url';
 import LucideIcon from '../ui/LucideIcon.astro';
 ---
 
@@ -13,6 +14,9 @@ import LucideIcon from '../ui/LucideIcon.astro';
           Free, open-source platform for cybersecurity write-ups that emphasize decision-making and
           critical thinking.
         </p>
+        <p class="mt-3 text-sm text-snow">
+          Created by <span class="font-semibold text-crimson">Amrloksha151</span>
+        </p>
       </div>
 
       <!-- Links Column -->
@@ -20,16 +24,16 @@ import LucideIcon from '../ui/LucideIcon.astro';
         <h4 class="text-sm font-syne font-bold text-snow mb-4">Navigation</h4>
         <ul class="space-y-2 text-sm">
           <li>
-            <a href="/" class="text-slate hover:text-crimson transition-colors"> Home </a>
+            <a href={withBase('/')} class="text-slate hover:text-crimson transition-colors"> Home </a>
           </li>
           <li>
-            <a href="/#writeups" class="text-slate hover:text-crimson transition-colors">
+            <a href={withBase('/#writeups')} class="text-slate hover:text-crimson transition-colors">
               All Write-ups
             </a>
           </li>
           <li>
             <a
-              href="https://github.com/livewriteups/livewriteups/issues/new?labels=submission&template=writeup-submission.md"
+              href="https://github.com/Amrloksha151/Live-Write-Ups/issues/new?labels=submission&template=writeup-submission.md"
               target="_blank"
               rel="noopener noreferrer"
               class="text-slate hover:text-crimson transition-colors"
@@ -38,7 +42,7 @@ import LucideIcon from '../ui/LucideIcon.astro';
             </a>
           </li>
           <li>
-            <a href="/about" class="text-slate hover:text-crimson transition-colors"> About </a>
+            <a href={withBase('/about')} class="text-slate hover:text-crimson transition-colors"> About </a>
           </li>
         </ul>
       </div>
@@ -51,7 +55,7 @@ import LucideIcon from '../ui/LucideIcon.astro';
           · No tracking
         </p>
         <a
-          href="https://github.com/livewriteups/livewriteups"
+          href="https://github.com/Amrloksha151/Live-Write-Ups"
           target="_blank"
           rel="noopener noreferrer"
           class="inline-flex items-center gap-2 text-slate hover:text-crimson transition-colors"
@@ -65,12 +69,7 @@ import LucideIcon from '../ui/LucideIcon.astro';
 
     <!-- Bottom bar -->
     <div class="border-t border-slate/20 py-6">
-      <p class="text-xs text-slate text-center">
-        © 2026 Live Write Ups · All content licensed under
-        <a href="https://creativecommons.org/licenses/by-sa/4.0/" class="text-crimson hover:text-scarlet transition-colors">
-          CC BY-SA 4.0
-        </a>
-      </p>
+      <p class="text-xs text-slate text-center">© 2026 Live Write Ups · Created by Amrloksha151</p>
     </div>
   </div>
 </footer>

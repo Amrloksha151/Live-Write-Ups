@@ -1,3 +1,4 @@
+import { withBase } from './url';
 import { getCollection } from 'astro:content';
 
 export const PAGE_SIZE = 12;
@@ -16,8 +17,8 @@ export function paginateWriteups(writeups: Awaited<ReturnType<typeof getPublishe
   const start = (currentPage - 1) * PAGE_SIZE;
   const pageItems = writeups.slice(start, start + PAGE_SIZE);
 
-  const prevUrl = currentPage > 1 ? currentPage === 2 ? '/' : `/page/${currentPage - 1}` : undefined;
-  const nextUrl = currentPage < totalPages ? `/page/${currentPage + 1}` : undefined;
+  const prevUrl = currentPage > 1 ? currentPage === 2 ? withBase('/') : withBase(`/page/${currentPage - 1}`) : undefined;
+  const nextUrl = currentPage < totalPages ? withBase(`/page/${currentPage + 1}`) : undefined;
 
   return {
     pageItems,

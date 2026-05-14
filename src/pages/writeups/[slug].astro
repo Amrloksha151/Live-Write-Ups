@@ -7,6 +7,7 @@
  */
 
 import { getCollection } from 'astro:content';
+import { withBase } from '@/lib/url';
 
 export async function getStaticPaths() {
   const writeups = await getCollection('writeups', ({ data }) => !data.draft);
@@ -19,4 +20,4 @@ export async function getStaticPaths() {
 const { slug } = Astro.params;
 
 // Redirect to the first stage
-return Astro.redirect(`/writeups/${slug}/stage/1`);
+return Astro.redirect(withBase(`/writeups/${slug}/stage/1`));

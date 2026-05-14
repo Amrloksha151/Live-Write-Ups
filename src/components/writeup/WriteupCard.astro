@@ -1,5 +1,6 @@
 ---
 import { Image } from 'astro:assets';
+import { withBase } from '../../lib/url';
 import TagPill from './TagPill.astro';
 import Badge from '../ui/Badge.astro';
 
@@ -33,7 +34,7 @@ const initials = author
 ---
 
 <a
-  href={`/writeups/${slug}/stage/1`}
+  href={withBase(`/writeups/${slug}/stage/1`)}
   class="group block rounded-lg bg-snow border border-slate/30 overflow-hidden hover:shadow-lg hover:border-crimson/50 transition-all duration-200 hover:translate-y-[-2px] focus-ring"
 >
   {
