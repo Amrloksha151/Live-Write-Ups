@@ -1,5 +1,6 @@
 <div align="center">
 
+![Logo](https://raw.githubusercontent.com/Amrloksha151/Live-Write-Ups/main/public/logo.png)
 # Live Write Ups
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
 ![Astro](https://img.shields.io/badge/Astro-BC52EE?style=for-the-badge&logo=astro&logoColor=white)
