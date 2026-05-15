@@ -13,12 +13,9 @@
   },
   "dependencies": {
     "@astrojs/mdx": "^5.0.4",
-    "@fontsource/dm-sans": "^5.2.8",
     "@fontsource/inter": "^5.2.8",
-    "@fontsource/jetbrains-mono": "^5.2.8",
     "@fontsource/playfair-display": "^5.2.8",
     "@fontsource/space-mono": "^5.2.9",
-    "@fontsource/syne": "^5.2.7",
     "@iconify-json/lucide": "^1.2.107",
     "@tailwindcss/line-clamp": "^0.4.4",
     "@tailwindcss/postcss": "^4.3.0",
