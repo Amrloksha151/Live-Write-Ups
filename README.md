@@ -20,7 +20,8 @@ This project started just as a personal tool that would help me in my security s
 
 ## Usage
 The idea is simple you open the ![website](https://writeups.amrloksha151.top) scroll down to the writeups, choose the writeup you like then start <strong>learning!</strong>
-<img width="1870" height="1091" alt="Usage" src="https://github.com/user-attachments/assets/5faee19f-4db1-4db3-a1c0-ed70a8e9660a" />
+<img width="1870" height="1091" alt="Usage" src="https://github.com/user-attachments/assets/e20dfd97-3cf1-44ee-bf65-ca87052fa761" />
+
 
 ## Contribution
 ## License
