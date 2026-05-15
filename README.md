@@ -22,8 +22,63 @@ This project started just as a personal tool that would help me in my security s
 The idea is simple you open the ![website](https://writeups.amrloksha151.top) scroll down to the writeups, choose the writeup you like then start <strong>learning!</strong>
 <img width="1870" height="1091" alt="Usage" src="https://github.com/user-attachments/assets/e20dfd97-3cf1-44ee-bf65-ca87052fa761" />
 
+## Contributing
 
-## Contribution
+Contributions are welcome across the following scopes. Every PR **must** state its scope, type, and include a short description of what was done.
+
+**PR title format:** `[Scope] Type: Short description`
+**Example:** `[Writeup] Addition: Add SQL injection writeup`
+
+---
+
+### Scopes
+
+**`[Writeup]`** — Add or edit writeups in `src/content/`. Write them manually or use the installed Gemini skill (`writeup-manager`).
+
+**`[Component]`** — Add new MDX components or edit existing ones in `src/components/`. New components should be reusable and include a usage example.
+
+**`[UI]`** — Visual or layout changes. Must preserve the project's design identity — PRs that significantly alter the look and feel may not be merged.
+
+**`[Skill]`** — Edit the existing `writeup-manager` Gemini skill or add a new skill for another agent under `.gemini/skills/`.
+
+**`[Misc]`** — Documentation, file organization, config, or tooling.
+
+---
+
+### Steps
+
+1. Fork the repo using the **Fork** button on GitHub.
+2. Clone your fork locally:
+```bash
+   git clone https://github.com/your-username/Live-Write-Ups.git
+   cd Live-Write-Ups
+```
+3. Install dependencies:
+```bash
+   npm install
+```
+4. Make your changes.
+5. Verify the build passes before pushing:
+```bash
+   npm run build
+```
+6. Commit and push to your fork:
+```bash
+   git add .
+   git commit -m "[Scope] Type: Short description"
+   git push
+```
+7. Open a Pull Request from your fork to `main` with a clear title and a brief description of what was done.
+
+---
+
+### Rules
+
+- One scope per PR — split multi-scope changes into separate PRs.
+- PR type must be one of: **Addition**, **Deletion**, or **Refactor**.
+- PRs without a clear title and description will not be reviewed.
+- All contributions must respect the project's non-commercial license.
+
 ## License
 
 This project is licensed under the LWU-NC v1.0 License.
