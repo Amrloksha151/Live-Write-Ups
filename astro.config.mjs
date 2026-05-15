@@ -5,8 +5,8 @@ import icon from 'astro-icon';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://amrloksha151.github.io/Live-Write-Ups',
-  base: '/Live-Write-Ups',
+  site: 'https://writeups.amrloksha151.top/',
+  base: '/',
   vite: {
     resolve: {
       alias: {
