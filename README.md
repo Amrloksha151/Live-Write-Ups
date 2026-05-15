@@ -10,6 +10,16 @@
 ![Responsive](https://img.shields.io/badge/Responsive-Design-38B2AC?style=for-the-badge)
 ![Dark Mode](https://img.shields.io/badge/Dark-Mode-111827?style=for-the-badge)
 
+![License](https://img.shields.io/badge/license-LWU--NC%201.0-red)
+![Non-Commercial](https://img.shields.io/badge/usage-non--commercial-orange)
+
 </div>
-This project started just as a personal tool that would help me in my security skills via interactive writeups that are made using mdx. This idea was inspired from a similar paid website so I decided to make my own then I wanted to publish it to everyone! Now anyone can contribute with new writeups or components to the codebase, hope you enjoy it!
+This project started just as a personal tool that would help me in my security skills via interactive writeups that are made using mdx. This idea was inspired from a similar paid website so I decided to make my own then I wanted to publish it to everyone! Now anyone can contribute with new writeups or components to the codebase, *hope you enjoy it!*
 <img width="1920" height="1280" alt="Live Write Ups" src="https://github.com/user-attachments/assets/5a926f49-af20-48d7-8db0-c3fc384db227" />
+
+## License
+
+This project is licensed under the LWU-NC v1.0 License.
+
+Personal, educational, and research use are permitted.
+Commercial use is prohibited without explicit permission.
