@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 628" role="img" aria-label="Abstract forensics write-up cover">
-  <rect width="1200" height="628" fill="#2B2D42" />
-  <path d="M0 520C160 420 260 560 420 460C580 360 740 520 900 420C1020 345 1100 260 1200 300V628H0Z" fill="#EF233C" opacity="0.85" />
-  <path d="M120 110H580V380H120Z" fill="#EDF2F4" rx="28" />
-  <circle cx="390" cy="245" r="110" fill="#8D99AE" opacity="0.35" />
-  <circle cx="840" cy="210" r="94" fill="#EDF2F4" opacity="0.2" />
-  <text x="150" y="210" fill="#2B2D42" font-family="Arial, sans-serif" font-size="48" font-weight="700">Artifact</text>
-  <text x="150" y="265" fill="#D90429" font-family="Arial, sans-serif" font-size="30">Log Triage</text>
-</svg>

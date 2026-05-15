@@ -1,0 +1,61 @@
+---
+import LucideIcon from '../ui/LucideIcon.astro';
+
+export interface Props {
+  type: 'alerted' | 'success' | 'failure' | 'reset';
+  title: string;
+  message: string;
+}
+
+const { type, title, message } = Astro.props;
+
+const styles = {
+  alerted: {
+    border: 'border-neon-magenta',
+    bg: 'bg-neon-magenta/5',
+    icon: 'shield-alert',
+    text: 'text-neon-magenta',
+    label: 'Detection Triggered'
+  },
+  success: {
+    border: 'border-neon-green',
+    bg: 'bg-neon-green/5',
+    icon: 'shield-check',
+    text: 'text-neon-green',
+    label: 'Progress Secured'
+  },
+  failure: {
+    border: 'border-red-500',
+    bg: 'bg-red-500/5',
+    icon: 'circle-x',
+    text: 'text-red-500',
+    label: 'Operation Failed'
+  },
+  reset: {
+    border: 'border-neon-cyan',
+    bg: 'bg-neon-cyan/5',
+    icon: 'refresh-cw',
+    text: 'text-neon-cyan',
+    label: 'Connection Reset'
+  }
+};
+
+const style = styles[type] || styles.alerted;
+---
+
+<div class={`consequence-banner my-6 rounded-lg glass-lg border-l-4 ${style.border} ${style.bg} p-5 flex items-start gap-4 animate-in fade-in slide-in-from-left-4 duration-500`}>
+  <div class={`flex-shrink-0 mt-1 ${style.text}`}>
+    <LucideIcon name={style.icon as any} class="w-6 h-6" />
+  </div>
+  
+  <div class="space-y-1">
+    <div class={`flex items-center gap-2 text-xs font-display font-bold uppercase tracking-widest ${style.text}`}>
+      <span>{style.label}</span>
+      <span class="opacity-30">—</span>
+      <span class="text-frost">{title}</span>
+    </div>
+    <p class="text-sm font-inter text-frost/80 leading-relaxed">
+      {message}
+    </p>
+  </div>
+</div>

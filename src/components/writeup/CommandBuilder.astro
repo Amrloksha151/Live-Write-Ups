@@ -1,0 +1,98 @@
+---
+import LucideIcon from '../ui/LucideIcon.astro';
+
+export interface Props {
+  base: string;
+  options: Array<{ flag: string; label: string; desc: string }>;
+  target?: string;
+}
+
+const { base, options, target = '10.10.10.123' } = Astro.props;
+const uniqueId = Math.random().toString(36).slice(2, 9);
+---
+
+<div class="command-builder my-8 glass-lg rounded-xl border border-frost/10 overflow-hidden" data-builder-id={uniqueId}>
+  <!-- Header -->
+  <div class="bg-dark-surface/50 px-6 py-4 border-b border-frost/10 flex items-center gap-3">
+    <LucideIcon name="terminal" class="w-5 h-5 text-neon-green" />
+    <h3 class="font-display font-bold text-frost uppercase tracking-wider">Command Builder</h3>
+  </div>
+
+  <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
+    <!-- Options List -->
+    <div class="space-y-4">
+      <p class="text-xs font-display font-bold text-frost/50 uppercase tracking-widest">Select Flags</p>
+      {options.map((opt, idx) => (
+        <label class="group flex items-start gap-3 cursor-pointer">
+          <div class="relative flex items-center mt-1">
+            <input 
+              type="checkbox" 
+              class="flag-checkbox sr-only" 
+              data-flag={opt.flag}
+            />
+            <div class="w-5 h-5 rounded border-2 border-frost/20 group-hover:border-neon-green/50 transition-colors bg-dark-bg/40"></div>
+            <div class="checkbox-tick absolute inset-0 hidden items-center justify-center text-neon-green">
+              <LucideIcon name="circle-check" class="w-4 h-4" />
+            </div>
+          </div>
+          <div>
+            <span class="block text-sm font-inter font-bold text-frost group-hover:text-neon-green transition-colors">{opt.label}</span>
+            <span class="block text-xs font-inter text-frost/40">{opt.desc}</span>
+          </div>
+        </label>
+      ))}
+    </div>
+
+    <!-- Preview Box -->
+    <div class="flex flex-col h-full">
+      <p class="text-xs font-display font-bold text-frost/50 uppercase tracking-widest mb-4">Command Preview</p>
+      <div class="flex-grow bg-black/60 rounded-lg p-6 font-space-mono text-sm border border-neon-green/20 relative group">
+        <div class="text-neon-green flex items-start gap-2">
+          <span>$</span>
+          <span class="command-preview whitespace-pre-wrap">{base} {target}</span>
+        </div>
+        
+        <button class="copy-btn absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity p-2 hover:bg-frost/10 rounded-lg text-frost/60 hover:text-neon-cyan">
+          <LucideIcon name="refresh-cw" class="w-4 h-4" />
+        </button>
+      </div>
+      <p class="mt-4 text-[10px] text-frost/30 italic">Build the correct command to proceed to the next phase.</p>
+    </div>
+  </div>
+</div>
+
+<script define:vars={{ uniqueId, base, target }}>
+  const container = document.querySelector(`[data-builder-id="${uniqueId}"]`);
+  const checkboxes = container?.querySelectorAll('.flag-checkbox');
+  const preview = container?.querySelector('.command-preview');
+
+  const updatePreview = () => {
+    const selectedFlags = Array.from(checkboxes)
+      .filter(cb => cb.checked)
+      .map(cb => cb.getAttribute('data-flag'))
+      .join(' ');
+    
+    preview.textContent = `${base} ${selectedFlags} ${target}`.replace(/\s+/g, ' ').trim();
+  };
+
+  checkboxes?.forEach(cb => {
+    cb.addEventListener('change', () => {
+      const tick = cb.nextElementSibling.nextElementSibling;
+      if (cb.checked) {
+        tick.classList.remove('hidden');
+        tick.classList.add('flex');
+      } else {
+        tick.classList.add('hidden');
+        tick.classList.remove('flex');
+      }
+      updatePreview();
+    });
+  });
+</script>
+
+<style>
+  .flag-checkbox:checked + div {
+    border-color: theme('colors.neon-green' / 0.5);
+    background-color: theme('colors.neon-green' / 0.1);
+  }
+</style>

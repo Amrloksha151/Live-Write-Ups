@@ -1,0 +1,100 @@
+---
+import LucideIcon from '../ui/LucideIcon.astro';
+
+export interface Props {
+  title: string;
+  data: Array<Record<string, any>>;
+  filterBy?: string;
+}
+
+const { title, data, filterBy } = Astro.props;
+const uniqueId = Math.random().toString(36).slice(2, 9);
+const headers = Object.keys(data[0] || {});
+---
+
+<div class="log-explorer my-8 glass-lg rounded-xl border border-frost/10 overflow-hidden" data-log-id={uniqueId}>
+  <!-- Header -->
+  <div class="bg-dark-surface/50 px-6 py-4 border-b border-frost/10 flex items-center justify-between gap-4 flex-wrap">
+    <div class="flex items-center gap-3">
+      <LucideIcon name="database" class="w-5 h-5 text-neon-cyan" />
+      <h3 class="font-display font-bold text-frost uppercase tracking-wider">{title}</h3>
+    </div>
+    
+    <div class="relative flex-grow max-w-xs">
+      <LucideIcon name="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-frost/40" />
+      <input 
+        type="text" 
+        placeholder={`Search by ${filterBy || 'any field'}...`}
+        class="log-search w-full bg-black/40 border border-frost/20 rounded-lg py-2 pl-10 pr-4 text-sm text-frost focus:border-neon-cyan/50 focus:outline-none transition-colors"
+      />
+    </div>
+  </div>
+
+  <!-- Log Table -->
+  <div class="overflow-x-auto max-h-96 scrollbar-thin scrollbar-thumb-frost/20">
+    <table class="w-full text-left border-collapse">
+      <thead>
+        <tr class="bg-dark-bg/40 border-b border-frost/10">
+          {headers.map(header => (
+            <th class="px-6 py-3 text-xs font-display font-bold text-frost/50 uppercase tracking-widest">{header}</th>
+          ))}
+        </tr>
+      </thead>
+      <tbody class="log-body">
+        {data.map((row, idx) => (
+          <tr class="log-row border-b border-frost/5 hover:bg-frost/5 transition-colors" data-search-string={Object.values(row).join(' ').toLowerCase()}>
+            {headers.map(header => (
+              <td class="px-6 py-4 text-sm font-space-mono text-frost/80">
+                {header === 'status' ? (
+                  <span class={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
+                    row[header] >= 400 ? 'bg-neon-magenta/10 text-neon-magenta' : 
+                    row[header] >= 300 ? 'bg-yellow-500/10 text-yellow-500' : 
+                    'bg-neon-green/10 text-neon-green'
+                  }`}>
+                    {row[header]}
+                  </span>
+                ) : row[header]}
+              </td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  
+  <!-- Empty State -->
+  <div class="empty-state hidden p-12 text-center text-frost/40 italic text-sm">
+    No matching logs found...
+  </div>
+</div>
+
+<script define:vars={{ uniqueId }}>
+  const container = document.querySelector(`[data-log-id="${uniqueId}"]`);
+  const searchInput = container?.querySelector('.log-search');
+  const rows = container?.querySelectorAll('.log-row');
+  const emptyState = container?.querySelector('.empty-state');
+  const logBody = container?.querySelector('.log-body');
+
+  searchInput?.addEventListener('input', (e) => {
+    const term = e.target.value.toLowerCase();
+    let visibleCount = 0;
+
+    rows?.forEach(row => {
+      const searchStr = row.getAttribute('data-search-string');
+      if (searchStr?.includes(term)) {
+        row.classList.remove('hidden');
+        visibleCount++;
+      } else {
+        row.classList.add('hidden');
+      }
+    });
+
+    if (visibleCount === 0) {
+      emptyState?.classList.remove('hidden');
+      logBody?.classList.add('hidden');
+    } else {
+      emptyState?.classList.add('hidden');
+      logBody?.classList.remove('hidden');
+    }
+  });
+</script>
