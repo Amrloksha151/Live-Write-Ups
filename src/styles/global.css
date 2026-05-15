@@ -1,25 +1,38 @@
 @import "tailwindcss";
 
 @theme {
+  /* Dark theme colors */
+  --color-dark-bg: #0F172A;
+  --color-dark-surface: #1E293B;
+  --color-frost: #E2E8F0;
+  --color-neon-cyan: #00FFFF;
+  --color-neon-green: #00FF00;
+  --color-neon-magenta: #FF00FF;
+  --color-neon-orange: #FF6600;
+  
+  /* Legacy colors for backwards compatibility */
   --color-space: #2B2D42;
   --color-slate: #8D99AE;
   --color-snow: #EDF2F4;
   --color-crimson: #EF233C;
   --color-scarlet: #D90429;
 
-  --font-syne: "Syne", ui-sans-serif, system-ui, sans-serif;
+  /* Fonts */
+  --font-display: "Playfair Display", ui-serif, serif;
+  --font-inter: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-space-mono: "Space Mono", ui-monospace, SFMono-Regular, monospace;
   --font-dm: "DM Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 }
 
 /* Typography base */
 @layer base {
   html {
     @apply scroll-smooth;
+    color-scheme: dark;
   }
 
   body {
-    @apply bg-snow text-space font-dm;
+    @apply bg-dark-bg text-frost font-inter antialiased;
   }
 
   h1,
@@ -28,8 +41,129 @@
   h4,
   h5,
   h6 {
-    @apply font-syne font-bold;
+    @apply font-display font-bold text-frost;
   }
+}
+
+/* Glassmorphism & Neon utilities */
+@layer components {
+  .glass {
+    @apply bg-dark-surface/40 backdrop-blur-md border border-frost/10;
+  }
+
+  .glass-lg {
+    @apply bg-dark-surface/40 backdrop-blur-lg border border-frost/10;
+  }
+
+  /* Neon glow effects - lg+ only (disabled on mobile for performance) */
+  @screen lg {
+    .neon-glow-cyan {
+      @apply text-neon-cyan;
+      text-shadow: 0 0 10px currentColor, 0 0 20px rgba(0, 255, 255, 0.5);
+    }
+
+    .neon-glow-green {
+      @apply text-neon-green;
+      text-shadow: 0 0 10px currentColor, 0 0 20px rgba(0, 255, 0, 0.5);
+    }
+
+    .neon-glow-magenta {
+      @apply text-neon-magenta;
+      text-shadow: 0 0 10px currentColor, 0 0 20px rgba(255, 0, 255, 0.5);
+    }
+
+    .glow-pulse {
+      animation: glow-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+  }
+
+  /* Scroll reveal animation */
+  .reveal {
+    opacity: 0;
+    animation: reveal 0.6s ease-out forwards;
+  }
+
+  /* Focus ring for accessibility */
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neon-cyan focus-visible:ring-offset-2 focus-visible:ring-offset-dark-bg;
+  }
+}
+
+  /* Scroll reveal utilities removed in favor of JS-controlled reveal
+     behavior. Staggering should be set via inline `transition-delay`.
+  */
+
+  /* Hover glow effects for interactive elements */
+  .hover-glow-cyan {
+    @apply transition-all duration-300;
+  }
+  .hover-glow-cyan:hover {
+    text-shadow: 0 0 20px rgba(0, 255, 255, 0.8), 0 0 40px rgba(0, 255, 255, 0.4);
+  }
+
+  .hover-glow-green {
+    @apply transition-all duration-300;
+  }
+  .hover-glow-green:hover {
+    text-shadow: 0 0 20px rgba(0, 255, 0, 0.8), 0 0 40px rgba(0, 255, 0, 0.4);
+  }
+
+  .hover-glow-magenta {
+    @apply transition-all duration-300;
+  }
+  .hover-glow-magenta:hover {
+    text-shadow: 0 0 20px rgba(255, 0, 255, 0.8), 0 0 40px rgba(255, 0, 255, 0.4);
+  }
+
+  /* Scale effect for hover */
+  .hover-scale {
+    @apply transition-transform duration-300;
+  }
+  .hover-scale:hover {
+    transform: scale(1.05);
+  }
+
+  /* Underline animation */
+  .underline-animate {
+    position: relative;
+  }
+  .underline-animate::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: currentColor;
+    transition: width 0.3s ease;
+  }
+  .underline-animate:hover::after {
+    width: 100%;
+  }
+
+
+/* Accessibility: Respect prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* JS-controlled reveal animation (only applied when JS is available).
+   This avoids hiding content when JavaScript is disabled.
+*/
+.js-reveal [data-reveal] {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+.js-reveal [data-reveal].in-view {
+  opacity: 1;
+  transform: none;
 }
 
 /* Prose overrides for MDX writeups */
@@ -39,67 +173,67 @@
   }
 
   .prose h1 {
-    @apply text-5xl font-syne font-extrabold text-space mt-8 mb-4;
+    @apply text-5xl font-display font-extrabold text-frost mt-8 mb-4;
   }
 
   .prose h2 {
-    @apply text-3xl font-syne font-bold text-space mt-8 mb-4;
+    @apply text-3xl font-display font-bold text-frost mt-8 mb-4;
   }
 
   .prose h3 {
-    @apply text-2xl font-syne font-bold text-space mt-6 mb-3;
+    @apply text-2xl font-display font-bold text-frost mt-6 mb-3;
   }
 
   .prose p {
-    @apply text-base font-dm leading-relaxed text-space;
+    @apply text-base font-inter leading-relaxed text-frost/90;
   }
 
   .prose strong {
-    @apply font-bold text-space;
+    @apply font-semibold text-frost;
   }
 
   .prose a {
-    @apply text-crimson underline-offset-2 transition-colors hover:text-scarlet hover:underline;
+    @apply text-neon-cyan underline-offset-2 transition-colors hover:text-neon-magenta hover:underline;
   }
 
   .prose blockquote {
-    @apply border-l-4 border-crimson bg-snow py-1 pl-4 pr-4 italic text-space;
+    @apply border-l-4 border-neon-magenta bg-dark-surface/50 py-3 pl-4 pr-4 italic text-frost/80;
   }
 
   .prose code {
-    @apply font-mono text-sm;
+    @apply font-space-mono text-sm;
   }
 
   .prose pre {
-    @apply rounded bg-space p-4 font-mono text-snow overflow-x-auto;
+    @apply rounded-lg bg-dark-bg p-4 font-space-mono text-frost overflow-x-auto border border-frost/10;
   }
 
   .prose pre code {
-    @apply text-snow;
+    @apply text-frost;
   }
 
   .prose :not(pre) > code {
-    @apply rounded bg-slate/15 px-1.5 py-0.5 font-mono text-sm text-space;
+    @apply rounded bg-dark-surface px-1.5 py-0.5 font-space-mono text-sm text-neon-green border border-neon-green/30;
   }
 
   .prose ul {
-    @apply list-disc list-inside space-y-2;
+    @apply list-disc list-inside space-y-2 text-frost/90;
   }
 
   .prose ol {
-    @apply list-decimal list-inside space-y-2;
+    @apply list-decimal list-inside space-y-2 text-frost/90;
   }
 
   .prose li {
-    @apply text-space;
+    @apply text-frost/90 ml-2;
   }
 
   .prose img {
-    @apply rounded-lg;
+    @apply rounded-lg border border-frost/10;
   }
 
   .prose hr {
-    @apply border-slate/20 my-8;
+    @apply border-frost/10 my-8;
   }
 
   .prose table {
@@ -107,11 +241,11 @@
   }
 
   .prose th {
-    @apply border border-slate/20 bg-space px-3 py-2 text-snow font-syne;
+    @apply border border-frost/10 bg-dark-surface px-3 py-2 text-frost font-display font-bold;
   }
 
   .prose td {
-    @apply border border-slate/20 px-3 py-2;
+    @apply border border-frost/10 px-3 py-2 text-frost/90;
   }
 }
 
@@ -121,9 +255,9 @@
     @apply transition-all duration-500;
   }
 
-  /* Focus ring utility for accessibility */
-  .focus-ring {
-    @apply focus-visible:ring-2 focus-visible:ring-crimson focus-visible:ring-offset-2 focus-visible:ring-offset-snow;
+  /* Smooth transitions */
+  .smooth-transition {
+    @apply transition-all duration-300 ease-out;
   }
 
   /* Truncate utility for overflow text */

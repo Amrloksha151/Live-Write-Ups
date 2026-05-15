@@ -27,7 +27,7 @@ const tocHeadings = headings.filter((heading) => heading.depth === 2);
 
 <article class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-12">
   {frontmatter.coverImage && (
-    <div class="mb-8 overflow-hidden rounded-2xl border border-slate/20 shadow-sm bg-space/5">
+    <div class="mb-8 overflow-hidden rounded-2xl border border-slate/20 shadow-sm bg-dark-surface/30">
       <Image
         src={frontmatter.coverImage}
         alt={frontmatter.coverAlt ?? frontmatter.title}
@@ -59,7 +59,7 @@ const tocHeadings = headings.filter((heading) => heading.depth === 2);
           {prevPost ? (
             <a
               href={prevPost.href}
-              class="rounded-lg border border-slate/20 bg-snow px-4 py-3 text-sm font-dm text-space transition-colors hover:border-crimson hover:text-crimson focus-ring"
+              class="rounded-lg border border-slate/20 bg-dark-surface/40 px-4 py-3 text-sm font-dm text-frost transition-colors hover:border-crimson hover:text-crimson focus-ring"
             >
               <span class="block text-xs uppercase tracking-wide text-slate">Previous</span>
               <span class="block font-semibold">{prevPost.title}</span>
@@ -71,7 +71,7 @@ const tocHeadings = headings.filter((heading) => heading.depth === 2);
           {nextPost ? (
             <a
               href={nextPost.href}
-              class="rounded-lg border border-slate/20 bg-snow px-4 py-3 text-sm font-dm text-space transition-colors hover:border-crimson hover:text-crimson focus-ring sm:text-right"
+              class="rounded-lg border border-slate/20 bg-dark-surface/40 px-4 py-3 text-sm font-dm text-frost transition-colors hover:border-crimson hover:text-crimson focus-ring sm:text-right"
             >
               <span class="block text-xs uppercase tracking-wide text-slate">Next</span>
               <span class="block font-semibold">{nextPost.title}</span>
@@ -84,8 +84,8 @@ const tocHeadings = headings.filter((heading) => heading.depth === 2);
     </div>
 
     <aside class="lg:sticky lg:top-24">
-      <details class="rounded-xl border border-slate/20 bg-snow p-4 open:shadow-sm lg:open:shadow-none">
-        <summary class="cursor-pointer list-none font-syne font-bold text-space focus-ring">
+      <details class="rounded-xl border border-slate/20 bg-dark-surface/30 p-4 open:shadow-sm lg:open:shadow-none">
+        <summary class="cursor-pointer list-none font-syne font-bold text-frost focus-ring">
           Table of Contents
         </summary>
         <nav class="mt-4 space-y-3" aria-label="Table of contents">
@@ -93,13 +93,13 @@ const tocHeadings = headings.filter((heading) => heading.depth === 2);
             tocHeadings.map((heading) => (
               <a
                 href={`#${heading.slug}`}
-                class="block text-sm font-dm text-slate transition-colors hover:text-crimson focus-ring"
+                class="block text-sm font-dm text-frost/90 transition-colors hover:text-crimson focus-ring"
               >
                 {heading.text}
               </a>
             ))
           ) : (
-            <p class="text-sm font-dm text-slate">No sections yet.</p>
+            <p class="text-sm font-dm text-frost/70">No sections yet.</p>
           )}
         </nav>
       </details>

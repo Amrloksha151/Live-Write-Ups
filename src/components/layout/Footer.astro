@@ -3,31 +3,31 @@ import { withBase } from '../../lib/url';
 import LucideIcon from '../ui/LucideIcon.astro';
 ---
 
-<footer class="bg-space text-slate border-t border-slate/20 mt-16">
+<footer class="glass border-t border-neon-cyan/10 mt-16">
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
     <!-- Three-column grid -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-12 py-12">
       <!-- Brand Column -->
       <div>
-        <h3 class="text-lg font-syne font-bold text-snow mb-2">Live Write Ups</h3>
-        <p class="text-sm text-slate leading-relaxed">
+        <h3 class="text-lg font-display font-bold text-frost mb-2">Live Write Ups</h3>
+        <p class="text-sm text-frost/70 leading-relaxed">
           Free, open-source platform for cybersecurity write-ups that emphasize decision-making and
           critical thinking.
         </p>
-        <p class="mt-3 text-sm text-snow">
-          Created by <span class="font-semibold text-crimson">Amrloksha151</span>
+        <p class="mt-3 text-sm text-frost/80">
+          Created by <span class="font-semibold text-neon-cyan">Amrloksha151</span>
         </p>
       </div>
 
       <!-- Links Column -->
       <div>
-        <h4 class="text-sm font-syne font-bold text-snow mb-4">Navigation</h4>
+        <h4 class="text-sm font-display font-bold text-frost mb-4">Navigation</h4>
         <ul class="space-y-2 text-sm">
           <li>
-            <a href={withBase('/')} class="text-slate hover:text-crimson transition-colors"> Home </a>
+            <a href={withBase('/')} class="text-frost/70 hover:text-neon-cyan transition-all duration-300 hover-glow-cyan"> Home </a>
           </li>
           <li>
-            <a href={withBase('/#writeups')} class="text-slate hover:text-crimson transition-colors">
+            <a href={withBase('/#writeups')} class="text-frost/70 hover:text-neon-cyan transition-all duration-300 hover-glow-cyan">
               All Write-ups
             </a>
           </li>
@@ -36,29 +36,29 @@ import LucideIcon from '../ui/LucideIcon.astro';
               href="https://github.com/Amrloksha151/Live-Write-Ups/issues/new?labels=submission&template=writeup-submission.md"
               target="_blank"
               rel="noopener noreferrer"
-              class="text-slate hover:text-crimson transition-colors"
+              class="text-frost/70 hover:text-neon-cyan transition-all duration-300 hover-glow-cyan"
             >
               Submit a Write-up
             </a>
           </li>
           <li>
-            <a href={withBase('/about')} class="text-slate hover:text-crimson transition-colors"> About </a>
+            <a href={withBase('/about')} class="text-frost/70 hover:text-neon-cyan transition-all duration-300 hover-glow-cyan"> About </a>
           </li>
         </ul>
       </div>
 
       <!-- Meta Column -->
       <div>
-        <h4 class="text-sm font-syne font-bold text-snow mb-4">Project</h4>
-        <p class="text-sm text-slate mb-4">
-          Built with <span class="text-crimson">Astro</span> & <span class="text-crimson">MDX</span> · Open Source
+        <h4 class="text-sm font-display font-bold text-frost mb-4">Project</h4>
+        <p class="text-sm text-frost/70 mb-4">
+          Built with <span class="text-neon-green">Astro</span> & <span class="text-neon-magenta">MDX</span> · Open Source
           · No tracking
         </p>
         <a
           href="https://github.com/Amrloksha151/Live-Write-Ups"
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-flex items-center gap-2 text-slate hover:text-crimson transition-colors"
+          class="inline-flex items-center gap-2 text-frost/70 hover:text-neon-cyan transition-all duration-300 hover-glow-cyan"
           aria-label="GitHub repository"
         >
           <LucideIcon name="github" class="w-4 h-4" />
@@ -68,8 +68,8 @@ import LucideIcon from '../ui/LucideIcon.astro';
     </div>
 
     <!-- Bottom bar -->
-    <div class="border-t border-slate/20 py-6">
-      <p class="text-xs text-slate text-center">© 2026 Live Write Ups · Created by Amrloksha151</p>
+    <div class="border-t border-frost/10 py-6">
+      <p class="text-xs text-frost/50 text-center">© 2026 Live Write Ups · Created by Amrloksha151</p>
     </div>
   </div>
 </footer>

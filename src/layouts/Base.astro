@@ -1,11 +1,12 @@
 ---
-import '@fontsource/syne/700.css';
-import '@fontsource/syne/800.css';
-import '@fontsource/dm-sans/400.css';
-import '@fontsource/dm-sans/500.css';
-import '@fontsource/dm-sans/600.css';
-import '@fontsource/jetbrains-mono/400.css';
-import '@fontsource/jetbrains-mono/500.css';
+// New fonts: Playfair Display (display), Inter (body), Space Mono (code)
+import '@fontsource/playfair-display/700.css';
+import '@fontsource/playfair-display/800.css';
+import '@fontsource/inter/400.css';
+import '@fontsource/inter/500.css';
+import '@fontsource/inter/600.css';
+import '@fontsource/space-mono/400.css';
+import '@fontsource/space-mono/700.css';
 import '../styles/global.css';
 
 export interface Props {
@@ -66,5 +67,35 @@ const canonicalUrl = canonical ? `${siteUrl}${canonical}` : `${siteUrl}${Astro.u
   </head>
   <body class="min-h-screen flex flex-col">
     <slot />
+    <script>
+      // Reveal observer: Adds .js-reveal to <html> and toggles .in-view on elements with [data-reveal]
+      (function () {
+        try {
+          document.documentElement.classList.add('js-reveal');
+          const nodes = document.querySelectorAll('[data-reveal]');
+          if (!nodes.length) return;
+
+          if ('IntersectionObserver' in window) {
+            const io = new IntersectionObserver((entries) => {
+              entries.forEach((e) => {
+                if (e.isIntersecting) {
+                  e.target.classList.add('in-view');
+                  // once visible, unobserve to avoid extra work
+                  io.unobserve(e.target);
+                }
+              });
+            }, { threshold: 0.12 });
+
+            nodes.forEach((n) => io.observe(n));
+          } else {
+            // Fallback: reveal all after short delay
+            setTimeout(() => nodes.forEach(n => n.classList.add('in-view')), 50);
+          }
+        } catch (err) {
+          // Fail silently — do not block page render
+          console.warn('Reveal observer failed', err);
+        }
+      })();
+    </script>
   </body>
 </html>

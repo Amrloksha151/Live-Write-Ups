@@ -35,15 +35,15 @@ const initials = author
 
 <a
   href={withBase(`/writeups/${slug}/stage/1`)}
-  class="group block rounded-lg bg-snow border border-slate/30 overflow-hidden hover:shadow-lg hover:border-crimson/50 transition-all duration-200 hover:translate-y-[-2px] focus-ring"
+  class="group block rounded-lg glass glass-lg overflow-hidden hover:shadow-lg hover:shadow-neon-cyan/20 hover:border-neon-cyan/50 transition-all duration-300 hover:translate-y-[-2px] focus-ring"
 >
   {
     coverImage && (
-      <div class="relative w-full aspect-video overflow-hidden bg-slate/10 rounded-t-lg">
+      <div class="relative w-full aspect-video overflow-hidden bg-dark-surface/30 rounded-t-lg">
         <Image
           src={coverImage}
           alt={title}
-          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+          class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
         />
       </div>
     )
@@ -57,35 +57,35 @@ const initials = author
           <TagPill tag={tag} />
         ))}
         {tags.length > 3 && (
-          <span class="text-xs text-slate font-dm">+{tags.length - 3}</span>
+          <span class="text-xs text-frost/60 font-inter">+{tags.length - 3}</span>
         )}
       </div>
     )}
 
     <!-- Title -->
-    <h3 class="text-lg font-syne font-bold text-space line-clamp-2">
+    <h3 class="text-lg font-display font-bold text-frost line-clamp-2">
       {title}
     </h3>
 
     <!-- Description -->
-    <p class="text-sm text-slate font-dm line-clamp-2">
+    <p class="text-sm text-frost/70 font-inter line-clamp-2">
       {description}
     </p>
 
     <!-- Footer: Author, Date, Difficulty -->
-    <div class="flex items-center justify-between pt-3 border-t border-slate/10">
+    <div class="flex items-center justify-between pt-3 border-t border-frost/10">
       <div class="flex items-center gap-2">
         <!-- Author Avatar Placeholder -->
-        <div class="w-8 h-8 rounded-full bg-crimson/20 flex items-center justify-center">
-          <span class="text-xs font-dm font-bold text-crimson">
+        <div class="w-8 h-8 rounded-full bg-neon-cyan/20 flex items-center justify-center">
+          <span class="text-xs font-inter font-bold text-neon-cyan">
             {initials}
           </span>
         </div>
         <div class="flex flex-col gap-0">
-          <span class="text-xs font-dm font-semibold text-space">
+          <span class="text-xs font-inter font-semibold text-frost">
             {author}
           </span>
-          <span class="text-xs text-slate font-dm">
+          <span class="text-xs text-frost/50 font-inter">
             {formattedDate}
           </span>
         </div>

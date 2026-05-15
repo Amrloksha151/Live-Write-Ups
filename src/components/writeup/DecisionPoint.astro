@@ -31,15 +31,15 @@ const shuffledOptions = allOptions.sort(() => Math.random() - 0.5);
 const correctIndex = shuffledOptions.indexOf(chosen);
 ---
 
-<div class="decision-point my-8 rounded-lg bg-snow border-l-4 border-crimson p-6 shadow-sm" data-decision-id={uniqueId}>
+<div class="decision-point my-8 rounded-lg glass glass-lg border-l-4 border-neon-magenta p-6" data-decision-id={uniqueId}>
   <!-- Header with Icon and Label -->
   <div class="flex items-center gap-3 mb-4">
-    <LucideIcon name="lightbulb" class="w-5 h-5 text-crimson flex-shrink-0" />
-    <p class="text-xs font-syne font-bold text-crimson uppercase tracking-wide">Decision Point Quiz</p>
+    <LucideIcon name="lightbulb" class="w-5 h-5 text-neon-magenta flex-shrink-0 lg:animate-bounce" />
+    <p class="text-xs font-display font-bold text-neon-magenta uppercase tracking-wide">Decision Point</p>
   </div>
 
   <!-- Question -->
-  <h3 class="text-lg font-syne font-bold text-space mb-6">
+  <h3 class="text-lg font-display font-bold text-frost mb-6">
     {question}
   </h3>
 
@@ -48,14 +48,14 @@ const correctIndex = shuffledOptions.indexOf(chosen);
     {shuffledOptions.map((option, idx) => (
       <button
         type="button"
-        class="decision-option w-full text-left px-5 py-4 rounded-lg bg-white border-2 border-slate/30 hover:border-crimson/50 hover:bg-slate/5 transition-all cursor-pointer"
+        class="decision-option w-full text-left px-5 py-4 rounded-lg bg-dark-surface/40 border-2 border-frost/10 hover:border-neon-cyan/50 hover:bg-dark-surface/60 transition-all cursor-pointer"
         data-option-index={idx}
         data-is-correct={idx === correctIndex}
         aria-pressed="false"
       >
         <div class="flex items-start gap-3">
-          <div class="flex-shrink-0 w-5 h-5 rounded-full border-2 border-slate/40 mt-0.5 transition-colors" />
-          <p class="text-sm font-dm text-space leading-relaxed">{option}</p>
+          <div class="flex-shrink-0 w-5 h-5 rounded-full border-2 border-frost/30 mt-0.5 transition-colors" />
+          <p class="text-sm font-inter text-frost leading-relaxed">{option}</p>
         </div>
       </button>
     ))}
@@ -63,24 +63,24 @@ const correctIndex = shuffledOptions.indexOf(chosen);
 
   <!-- Feedback Section (hidden until selection) -->
   <div 
-    class="decision-feedback hidden border-t border-slate/10 pt-6 space-y-3"
+    class="decision-feedback hidden border-t border-frost/10 pt-6 space-y-3"
     data-feedback-container={uniqueId}
   >
     <!-- Result Badge -->
     <div class="decision-result flex items-center gap-2">
       <div class="result-icon w-5 h-5 rounded-full" />
-      <span class="result-text text-sm font-dm font-semibold uppercase tracking-wide" />
+      <span class="result-text text-sm font-inter font-semibold uppercase tracking-wide" />
     </div>
 
     <!-- Explanation -->
-    <p class="text-sm font-dm text-space/90 leading-relaxed italic">
-      <span class="font-semibold text-space">Why:</span> {explanation}
+    <p class="text-sm font-inter text-frost/80 leading-relaxed italic">
+      <span class="font-semibold text-frost">Why:</span> {explanation}
     </p>
 
     <!-- Try Again Button (for incorrect answers) -->
     <button
       type="button"
-      class="try-again-btn hidden mt-4 px-4 py-2 bg-slate/10 text-slate hover:bg-slate/20 rounded-lg font-dm text-sm font-medium transition-colors"
+      class="try-again-btn hidden mt-4 px-4 py-2 bg-dark-surface/60 text-frost hover:bg-dark-surface/80 hover:text-neon-cyan rounded-lg font-inter text-sm font-medium transition-all duration-300 hover:scale-105"
       data-decision-id={uniqueId}
     >
       Try Another Answer
@@ -128,14 +128,14 @@ const correctIndex = shuffledOptions.indexOf(chosen);
           resultText.textContent = 'Not Quite!';
           resultText.classList.add('text-red-700');
           option.classList.add('border-red-400', 'bg-red-50');
-          option.classList.remove('hover:border-crimson/50', 'hover:bg-slate/5');
+          option.classList.remove('hover:border-neon-cyan/50', 'hover:bg-dark-surface/60');
           tryAgainBtn.classList.remove('hidden');
         }
 
         // Disable all options
         options.forEach((opt) => {
           opt.disabled = true;
-          opt.classList.remove('hover:border-crimson/50', 'hover:bg-slate/5', 'cursor-pointer');
+          opt.classList.remove('hover:border-neon-cyan/50', 'hover:bg-dark-surface/60', 'cursor-pointer');
         });
       });
     });
@@ -145,13 +145,13 @@ const correctIndex = shuffledOptions.indexOf(chosen);
       feedbackContainer.classList.add('hidden');
       resultIcon.className = 'result-icon w-5 h-5 rounded-full';
       resultText.textContent = '';
-      resultText.className = 'result-text text-sm font-dm font-semibold uppercase tracking-wide';
+      resultText.className = 'result-text text-sm font-inter font-semibold uppercase tracking-wide';
       tryAgainBtn.classList.add('hidden');
 
       options.forEach((opt) => {
         opt.disabled = false;
         opt.classList.remove('border-green-500', 'bg-green-50', 'border-red-400', 'bg-red-50');
-        opt.classList.add('hover:border-crimson/50', 'hover:bg-slate/5', 'cursor-pointer');
+        opt.classList.add('hover:border-neon-cyan/50', 'hover:bg-dark-surface/60', 'cursor-pointer');
         opt.setAttribute('aria-pressed', 'false');
       });
     });

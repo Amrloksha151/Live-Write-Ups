@@ -1,43 +1,60 @@
 ---
 ---
 
-<section class="relative min-h-[60vh] bg-space flex items-center justify-center">
-  <!-- Decorative grid background -->
-  <div
-    class="absolute inset-0 opacity-5"
-    style="background-image: linear-gradient(0deg, transparent 24%, rgba(239, 35, 60, 0.05) 25%, rgba(239, 35, 60, 0.05) 26%, transparent 27%, transparent 74%, rgba(239, 35, 60, 0.05) 75%, rgba(239, 35, 60, 0.05) 76%, transparent 77%, transparent); background-size: 50px 50px;"
-  >
+<section class="relative min-h-[70vh] bg-gradient-to-b from-dark-bg via-dark-surface/50 to-dark-bg flex items-center justify-center overflow-hidden">
+  <!-- Animated code-like background elements -->
+  <div class="absolute inset-0 opacity-5 pointer-events-none">
+    <div
+      style="background-image: linear-gradient(0deg, transparent 24%, rgba(0, 255, 255, 0.05) 25%, rgba(0, 255, 255, 0.05) 26%, transparent 27%, transparent 74%, rgba(0, 255, 255, 0.05) 75%, rgba(0, 255, 255, 0.05) 76%, transparent 77%, transparent); background-size: 50px 50px;"
+      class="absolute inset-0"
+    >
+    </div>
   </div>
+
+  <!-- Floating accent elements (desktop only) -->
+  <div class="hidden lg:block absolute top-20 right-20 w-64 h-64 bg-neon-cyan/10 rounded-full blur-3xl opacity-20"></div>
+  <div class="hidden lg:block absolute bottom-20 left-20 w-64 h-64 bg-neon-magenta/10 rounded-full blur-3xl opacity-20"></div>
 
   <!-- Content -->
   <div class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center md:text-left">
     <!-- Overline -->
-    <p class="text-xs md:text-sm font-syne font-bold text-crimson uppercase tracking-widest mb-4">
+    <p data-reveal style="transition-delay: 0.05s" class="text-xs md:text-sm font-display font-bold text-neon-cyan uppercase tracking-widest mb-4" data-glow>
       Live Write Ups
     </p>
 
     <!-- Headline -->
-    <h1 class="text-4xl md:text-6xl lg:text-7xl font-syne font-extrabold text-snow mb-4 leading-tight">
+    <h1 data-reveal style="transition-delay: 0.1s" class="text-4xl md:text-6xl lg:text-7xl font-display font-extrabold text-frost mb-4 leading-tight" data-glow-headline>
       Read the hack.<br class="hidden md:block" /> Learn the thinking.
     </h1>
 
     <!-- Subheading -->
-    <p class="text-base md:text-lg text-slate max-w-2xl mx-auto md:mx-0 mb-8 font-dm leading-relaxed">
-      Cybersecurity write-ups that emphasize decision-making. Discover not just <span class="text-crimson font-semibold"
-        >what</span
-      > was done, but <span class="text-crimson font-semibold">why</span> it was done at every critical juncture.
+    <p data-reveal style="transition-delay: 0.2s" class="text-base md:text-lg text-frost/80 max-w-2xl mx-auto md:mx-0 mb-8 font-inter leading-relaxed">
+      Cybersecurity write-ups that emphasize <span class="text-neon-cyan font-semibold">decision-making</span>. Discover not just <span class="text-neon-green font-semibold">what</span> was done, but <span class="text-neon-magenta font-semibold">why</span> it was done at every critical juncture.
     </p>
 
     <!-- CTA Button -->
     <a
       href="#writeups"
-      class="mb-3 inline-block px-6 py-3 bg-crimson text-snow font-dm font-semibold rounded hover:bg-scarlet transition-colors focus-ring"
+      data-reveal
+      style="transition-delay: 0.3s"
+      class="mb-3 inline-block px-6 py-3 bg-gradient-to-r from-neon-cyan to-neon-green text-dark-bg font-display font-bold rounded-lg hover:shadow-lg hover:shadow-neon-cyan/50 transition-all duration-300 hover:scale-105 focus-ring"
     >
       Browse Write-ups
     </a>
   </div>
 
-  <!-- Decorative accent line -->
-  <div class="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-crimson to-transparent opacity-20">
+  <!-- Decorative neon accent line -->
+  <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-neon-cyan to-transparent opacity-30">
   </div>
 </section>
+
+<style>
+  @media (min-width: 1024px) {
+    [data-glow] {
+      animation: glow-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    [data-glow-headline] {
+      text-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+    }
+  }
+</style>

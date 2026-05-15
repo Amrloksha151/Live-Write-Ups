@@ -86,9 +86,9 @@ const { Content: FullContent } = await render(writeup);
 
 <Base title={pageTitle} description={pageDescription}>
   <Navbar />
-  <div class="min-h-screen bg-gradient-to-b from-snow to-white">
+  <div class="min-h-screen bg-dark-bg">
     <!-- Header -->
-    <header class="bg-space text-snow py-8 md:py-12">
+    <header class="bg-dark-surface/20 text-frost py-8 md:py-12">
       <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <WriteupHeader
           title={writeup.data.title}
@@ -110,7 +110,7 @@ const { Content: FullContent } = await render(writeup);
 
       <!-- Stage Title -->
       <div class="mb-8">
-        <h2 class="text-3xl md:text-4xl font-syne font-bold text-space mb-2">
+        <h2 class="text-3xl md:text-4xl font-syne font-bold text-frost mb-2">
           {stage.title}
         </h2>
         {stage.description && (

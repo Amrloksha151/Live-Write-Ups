@@ -71,36 +71,51 @@ colors: {
 
 ## 3. Typography
 
-### Font pairing
-| Role | Font | Weight(s) | Source |
-|---|---|---|---|
-| Display / Hero headings | **Syne** | 700, 800 | `@fontsource/syne` |
-| Body / UI | **DM Sans** | 400, 500, 600 | `@fontsource/dm-sans` |
-| Code / Mono blocks | **JetBrains Mono** | 400, 500 | `@fontsource/jetbrains-mono` |
+### Font pairing (Dark Glassmorphism + Cyber Aesthetic)
+| Role | Font | Weight(s) | Source | Rationale |
+|---|---|---|---|---|
+| Display / Hero headings | **Playfair Display** | 700, 800 | `@fontsource/playfair-display` | Elegant, premium aesthetic; excellent with neon accents |
+| Body / UI | **Inter** | 400, 500, 600 | `@fontsource/inter` | Modern, highly readable on dark backgrounds; de facto web standard |
+| Code / Mono blocks | **Space Mono** | 400, 700 | `@fontsource/space-mono` | Grittier, tech-forward; stronger personality than JetBrains Mono |
 
 Install:
 ```bash
-npm install @fontsource/syne @fontsource/dm-sans @fontsource/jetbrains-mono
+npm install @fontsource/playfair-display @fontsource/inter @fontsource/space-mono
 ```
 
 Import in `src/layouts/Base.astro`:
 ```js
-import '@fontsource/syne/700.css';
-import '@fontsource/syne/800.css';
-import '@fontsource/dm-sans/400.css';
-import '@fontsource/dm-sans/500.css';
-import '@fontsource/dm-sans/600.css';
-import '@fontsource/jetbrains-mono/400.css';
-import '@fontsource/jetbrains-mono/500.css';
+import '@fontsource/playfair-display/700.css';
+import '@fontsource/playfair-display/800.css';
+import '@fontsource/inter/400.css';
+import '@fontsource/inter/500.css';
+import '@fontsource/inter/600.css';
+import '@fontsource/space-mono/400.css';
+import '@fontsource/space-mono/700.css';
 ```
 
 ### Typographic scale (Tailwind)
-- Hero title: `text-5xl lg:text-7xl font-syne font-extrabold`
-- Section headings: `text-3xl font-syne font-bold`
-- Card title: `text-xl font-syne font-bold`
-- Body: `text-base font-dm leading-relaxed` (line-height ~1.75)
-- Metadata / labels: `text-sm font-dm text-slate`
-- Code: `font-mono text-sm`
+- Hero title: `text-5xl lg:text-7xl font-display font-extrabold text-frost`
+- Section headings: `text-3xl font-display font-bold text-frost`
+- Card title: `text-xl font-display font-bold text-frost`
+- Body: `text-base font-inter leading-relaxed text-frost/90` (line-height ~1.75)
+- Metadata / labels: `text-sm font-inter text-frost/60`
+- Code: `font-mono text-sm font-space-mono`
+
+### Dark Mode Colors
+- **Background**: `#0F172A` (slate-900)
+- **Surface**: `#1E293B` (slate-800)
+- **Text (Primary)**: `#E2E8F0` (frost / slate-100)
+- **Text (Secondary)**: `#94A3B8` (frost/70)
+- **Text (Muted)**: `#64748B` (frost/60)
+- **Accent (Neon Cyan)**: `#00FFFF` (primary interactive)
+- **Accent (Neon Green)**: `#00FF00` (secondary interactive)
+- **Accent (Neon Magenta)**: `#FF00FF` (highlights, danger)
+
+### Glassmorphism Effects
+- Background blur: `backdrop-blur-md` (12px) to `backdrop-blur-lg` (16px)
+- Glass surface: `bg-dark-surface/40` with semi-transparent overlay
+- Neon glow (lg+ only): `text-shadow: 0 0 10px currentColor` (disabled on mobile)
 
 ---
 

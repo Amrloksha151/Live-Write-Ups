@@ -28,7 +28,7 @@ const isNextDisabled = currentStage === totalStages;
   {isPrevDisabled ? (
     <button
       disabled
-      class="inline-flex items-center gap-2 px-6 py-2.5 bg-snow/50 text-slate/40 border border-slate/10 rounded-lg font-dm font-medium cursor-not-allowed"
+      class="inline-flex items-center gap-2 px-6 py-2.5 bg-dark-surface/20 text-slate/40 border border-slate/10 rounded-lg font-dm font-medium cursor-not-allowed"
       aria-disabled="true"
     >
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -39,7 +39,7 @@ const isNextDisabled = currentStage === totalStages;
   ) : (
     <a
       href={prevUrl}
-      class="inline-flex items-center gap-2 px-6 py-2.5 bg-snow text-space border border-slate/30 rounded-lg font-dm font-medium hover:bg-slate/5 hover:border-slate/50 transition-colors"
+      class="inline-flex items-center gap-2 px-6 py-2.5 bg-dark-surface/40 text-frost border border-slate/30 rounded-lg font-dm font-medium hover:bg-dark-surface/50 hover:border-slate/50 transition-colors"
       aria-label={`Go to stage ${currentStage - 1}`}
     >
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -14,10 +14,10 @@ export interface Props {
 const { writeups, currentPage, lastPage, prevUrl, nextUrl } = Astro.props;
 ---
 
-<section id="writeups" class="bg-snow py-16">
+<section id="writeups" class="bg-dark-bg py-20">
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
     <!-- Section Heading -->
-    <h2 class="text-4xl font-syne font-bold text-space mb-12">
+    <h2 class="reveal text-4xl font-display font-bold text-frost mb-12 pb-4 border-b border-neon-cyan/20">
       Recent Write-ups
     </h2>
 
@@ -25,24 +25,26 @@ const { writeups, currentPage, lastPage, prevUrl, nextUrl } = Astro.props;
     {
       writeups.length === 0 ? (
         <div class="flex flex-col items-center justify-center py-12 gap-4">
-          <LucideIcon name="file-search" class="w-12 h-12 text-slate" />
-          <p class="text-lg text-slate font-dm">No write-ups found yet.</p>
-          <p class="text-sm text-slate/70 font-dm">Check back soon for new content!</p>
+          <LucideIcon name="file-search" class="w-12 h-12 text-frost/40" />
+          <p class="text-lg text-frost/70 font-inter">No write-ups found yet.</p>
+          <p class="text-sm text-frost/50 font-inter">Check back soon for new content!</p>
         </div>
       ) : (
         <>
           <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-            {writeups.map((writeup) => (
-              <WriteupCard
-                title={writeup.data.title}
-                description={writeup.data.description}
-                author={writeup.data.author}
-                publishedAt={writeup.data.publishedAt}
-                tags={writeup.data.tags}
-                difficulty={writeup.data.difficulty}
-                slug={writeup.id}
-                coverImage={writeup.data.coverImage}
-              />
+            {writeups.map((writeup, index) => (
+              <div data-reveal style={`transition-delay: ${index * 0.1}s`}>
+                <WriteupCard
+                  title={writeup.data.title}
+                  description={writeup.data.description}
+                  author={writeup.data.author}
+                  publishedAt={writeup.data.publishedAt}
+                  tags={writeup.data.tags}
+                  difficulty={writeup.data.difficulty}
+                  slug={writeup.id}
+                  coverImage={writeup.data.coverImage}
+                />
+              </div>
             ))}
           </div>
 

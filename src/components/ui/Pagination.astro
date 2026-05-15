@@ -21,7 +21,7 @@ const isNextDisabled = currentPage === lastPage;
     isPrevDisabled ? (
       <button
         disabled
-        class="px-4 py-2 rounded bg-slate/10 text-slate cursor-not-allowed font-dm text-sm"
+        class="px-4 py-2 rounded glass text-frost/40 cursor-not-allowed font-inter text-sm"
         aria-disabled="true"
       >
         ← Previous
@@ -29,7 +29,7 @@ const isNextDisabled = currentPage === lastPage;
     ) : (
       <a
         href={prevUrl}
-        class="px-4 py-2 rounded bg-space text-snow hover:bg-crimson transition-colors font-dm text-sm focus-ring"
+        class="px-4 py-2 rounded glass hover:border-neon-cyan/50 hover:bg-dark-surface/60 text-frost hover:text-neon-cyan transition-all font-inter text-sm focus-ring"
         aria-label="Go to previous page"
       >
         ← Previous
@@ -38,9 +38,9 @@ const isNextDisabled = currentPage === lastPage;
   }
 
   <!-- Page Indicator -->
-  <div class="text-center font-dm text-sm text-slate">
-    Page <span class="font-semibold text-space">{currentPage}</span> of
-    <span class="font-semibold text-space">{lastPage}</span>
+  <div class="text-center font-inter text-sm text-frost/70">
+    Page <span class="font-semibold text-neon-cyan">{currentPage}</span> of
+    <span class="font-semibold text-frost">{lastPage}</span>
   </div>
 
   <!-- Next Button -->
@@ -48,7 +48,7 @@ const isNextDisabled = currentPage === lastPage;
     isNextDisabled ? (
       <button
         disabled
-        class="px-4 py-2 rounded bg-slate/10 text-slate cursor-not-allowed font-dm text-sm"
+        class="px-4 py-2 rounded glass text-frost/40 cursor-not-allowed font-inter text-sm"
         aria-disabled="true"
       >
         Next →
@@ -56,7 +56,7 @@ const isNextDisabled = currentPage === lastPage;
     ) : (
       <a
         href={nextUrl}
-        class="px-4 py-2 rounded bg-space text-snow hover:bg-crimson transition-colors font-dm text-sm focus-ring"
+        class="px-4 py-2 rounded glass hover:border-neon-cyan/50 hover:bg-dark-surface/60 text-frost hover:text-neon-cyan transition-all font-inter text-sm focus-ring"
         aria-label="Go to next page"
       >
         Next →
