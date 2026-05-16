@@ -1,0 +1,142 @@
+---
+title: "Lab: Reflected XSS with some SVG markup allowed"
+description: "Bypass a restrictive WAF by identifying overlooked SVG tags and event handlers to execute JavaScript in an unexpected context."
+publishedAt: 2026-05-16
+author: "Amrloksha.151"
+tags: ["lab", "xss", "svg", "waf-bypass", "portswigger"]
+difficulty: "beginner"
+platform: "PortSwigger Academy"
+category: "Web Security"
+coverImage: "./reflected-xss-svg-allowed-cover.webp"
+coverAlt: "SVG XSS illustration showing code within a vector graphic"
+readingTime: 10
+draft: false
+---
+
+import Stage from '../../components/writeup/Stage.astro';
+import DecisionPoint from '../../components/writeup/DecisionPoint.astro';
+import KnowledgeNote from '../../components/writeup/KnowledgeNote.astro';
+import LiveLogExplorer from '../../components/writeup/LiveLogExplorer.astro';
+import CommandBuilder from '../../components/writeup/CommandBuilder.astro';
+import ConsequenceBanner from '../../components/writeup/ConsequenceBanner.astro';
+import LucideIcon from '../../components/ui/LucideIcon.astro';
+
+<Stage title="The Brief" description="Analyzing the search functionality">
+
+## The Mission
+
+The target application features a search function that reflects user input. However, a Web Application Firewall (WAF) is in place, blocking common XSS payloads. Your objective is to find a way to execute `alert(1)` by bypassing these filters.
+
+**Constraints**:
+- **Strict Filtering**: Common HTML tags like `<script>`, `<img>`, and `<body>` are explicitly blocked.
+- **Modern Context**: The application supports embedded media and vector graphics.
+
+<KnowledgeNote term="Reflected XSS" definition="A type of Cross-Site Scripting where the malicious script is 'reflected' off a web application to the victim's browser, typically via a URL parameter.">
+  In this lab, the reflection point is the search query parameter.
+</KnowledgeNote>
+
+</Stage>
+
+<Stage title="Initial Recon" description="Probing the WAF boundaries">
+
+## Testing the Waters
+
+First, we need to confirm the presence of the filter and identify what it's looking for.
+
+<div class="terminal glass bg-black/80 rounded-lg p-4 font-space-mono text-sm border border-frost/20 mb-6">
+  <div class="text-neon-cyan">GET /?search=&lt;script&gt;alert(1)&lt;/script&gt; HTTP/1.1</div>
+  <div class="text-red-400 mt-2 italic opacity-80">// Response: 400 Bad Request - "Tag not allowed"</div>
+</div>
+
+<DecisionPoint
+  question="The WAF blocked the standard script tag. What is your next logical step?"
+  chosen="Brute-force a list of all HTML tags to see if any are overlooked."
+  reason="Filters are often based on blacklists. By testing every possible tag, we can find the 'holes' in the blacklist."
+  alternatives={["Try to use SQL injection instead", "Give up and report a false negative", "Wait for the WAF to time out"]}
+/>
+
+</Stage>
+
+<Stage title="Tag Discovery" description="Identifying the 'Holes' in the filter">
+
+## Automated Reconnaissance
+
+We'll use Burp Intruder to automate the discovery of allowed tags. We'll pull a list of all known HTML/SVG tags from the PortSwigger XSS Cheat Sheet.
+
+<LiveLogExplorer 
+  title="Intruder Results: Tags" 
+  filterBy="status"
+  data={[
+    { time: "14:10:01", request: "/?search=<script>", status: 400, message: "Tag not allowed" },
+    { time: "14:10:05", request: "/?search=<img>", status: 400, message: "Tag not allowed" },
+    { time: "14:10:12", request: "/?search=<svg>", status: 200, message: "OK" },
+    { time: "14:10:15", request: "/?search=<animatetransform>", status: 200, message: "OK" }
+  ]}
+/>
+
+<DecisionPoint
+  question="The scan reveals that <svg> and <animatetransform> are allowed. Why is this significant?"
+  chosen="SVG is an XML-based format that supports its own unique set of tags and event handlers often missed by WAFs."
+  reason="WAFs often prioritize common HTML tags. SVG elements like <animatetransform> provide a secondary execution context."
+  alternatives={["It means the server is running an old version of Apache", "SVG tags are faster to render", "It indicates the site is vulnerable to CSS injection"]}
+/>
+
+</Stage>
+
+<Stage title="Event Discovery" description="Finding the execution trigger">
+
+## Pinpointing the Event Handler
+
+Knowing `<animatetransform>` is allowed isn't enough; we need an event handler that the WAF also permits. We'll run another Intruder attack, this time targeting event attributes.
+
+<CommandBuilder
+  base="Payload Construction"
+  target="<svg><animatetransform §event§=1>"
+  options={[
+    { flag: "onbegin", label: "onbegin", desc: "Triggers when the animation starts" },
+    { flag: "onload", label: "onload", desc: "Triggers when the element loads" },
+    { flag: "onclick", label: "onclick", desc: "Requires user interaction" }
+  ]}
+/>
+
+<DecisionPoint
+  question="If 'onbegin' returns a 200 OK while 'onload' returns a 400, which one should you use?"
+  chosen="onbegin"
+  reason="It is the only allowed event handler that triggers automatically without requiring user interaction."
+  alternatives={["onclick", "onmouseover", "onerrror"]}
+/>
+
+</Stage>
+
+<Stage title="Exploitation" description="Executing the final payload">
+
+## The Final Strike
+
+We combine the allowed tag and the allowed event handler. We also need to specify the `attributeName` for the animation to be valid.
+
+<div class="terminal glass bg-black/80 rounded-lg p-4 font-space-mono text-sm border border-frost/20 mb-6">
+  <div class="text-neon-cyan">/?search=%3Csvg%3E%3Canimatetransform+onbegin%3Dalert(1)+attributeName%3Dtransform%3E%3C%2Fsvg%3E</div>
+</div>
+
+<ConsequenceBanner 
+  type="success" 
+  title="Lab Solved" 
+  message="Payload executed! The browser interprets the SVG animation, triggers the 'onbegin' event, and executes alert(1)."
+/>
+
+</Stage>
+
+<Stage title="The Debrief" description="Lessons learned and mitigation">
+
+## Mission Accomplished
+
+This lab demonstrates that "Tag Blocking" is an incomplete defense.
+
+### Skills Earned
+- **Filter Enumeration**: Systematically mapping allowed vs. blocked inputs.
+- **SVG XSS**: Leveraging XML-based graphics for JavaScript execution.
+- **WAF Evasion**: Finding 'shadow' execution contexts in modern web standards.
+
+<LucideIcon name="check-circle" class="w-12 h-12 text-neon-green mx-auto mt-8" />
+
+</Stage>
